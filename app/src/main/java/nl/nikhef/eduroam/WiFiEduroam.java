@@ -53,7 +53,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.bouncycastle.util.encoders.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
-import nl.nikhef.eduroam.R;
 
 
 import android.annotation.TargetApi;
