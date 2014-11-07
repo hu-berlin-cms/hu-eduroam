@@ -1,0 +1,23 @@
+apply plugin: 'com.android.application'
+android {
+    compileSdkVersion 19
+    buildToolsVersion "21.1.0"
+
+    defaultConfig {
+        applicationId "nl.nikhef.eduroam"
+        minSdkVersion 14
+        targetSdkVersion 19
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+dependencies {
+    compile files('/home/groepeen/AndroidstudioProjects/hu-eduroam/libs/bcprov-jdk15on-151.jar')
+    compile files('/home/groepeen/AndroidstudioProjects/hu-eduroam/libs/bcpkix-jdk15on-151.jar')
+}
