@@ -159,8 +159,10 @@ public class WiFiEduroam extends Activity {
               
               updateStatus("Installing WiFi profile...");
               if (android.os.Build.VERSION.SDK_INT >= 11 && android.os.Build.VERSION.SDK_INT <= 17) {
+                // 11 == 3.0 Honeycomb 02/2011, 17 == 4.2 Jelly Bean
                 installCertificates();
               } else if (android.os.Build.VERSION.SDK_INT >= 18) {
+                // new features since 4.3
                 saveWifiConfig();
                 updateStatus("All done!");
                 // Clear the password field in the UI thread
@@ -197,6 +199,7 @@ public class WiFiEduroam extends Activity {
     WifiConfiguration currentConfig = new WifiConfiguration();
     
     List<WifiConfiguration> configs = null;
+    // try to get the configured networks for 10 seconds
     for (int i = 0; i < 10 && configs == null; i++) {
       configs = wifiManager.getConfiguredNetworks();
       try {
