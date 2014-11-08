@@ -207,14 +207,13 @@ public class WiFiEduroam extends Activity {
 			}
 		}
 
-		// Use the existing eduroam profile if it exists.
-		boolean ssidExists = false;
+		// Remove existing eduroam profiles
+        // There could possibly be more than one "eduroam" profile, which could cause errors
+        // We don't know which wrong settings existing profiles contain, just remove them
 		if (configs != null) {
 			for (WifiConfiguration config : configs) {
 				if (config.SSID.equals(surroundWithQuotes(ssid))) {
-					currentConfig = config;
-					ssidExists = true;
-					break;
+                    wifiManager.removeNetwork(config.networkId);
 				}
 			}
 		}
@@ -265,14 +264,10 @@ public class WiFiEduroam extends Activity {
 		} else {
 			throw new RuntimeException("API version mismatch!");
 		}
-		
-		if (!ssidExists) {
-			int networkId = wifiManager.addNetwork(currentConfig);
-			wifiManager.enableNetwork(networkId, false);
-		} else {
-			wifiManager.updateNetwork(currentConfig);
-			wifiManager.enableNetwork(currentConfig.networkId, false);
-		}
+
+        // add our new network
+		int networkId = wifiManager.addNetwork(currentConfig);
+		wifiManager.enableNetwork(networkId, false);
 		wifiManager.saveConfiguration();
 		
 	}
