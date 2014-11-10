@@ -39,6 +39,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -114,11 +115,11 @@ public class WiFiEduroam extends Activity {
   private EditText password;
   private String certificate;
   private String ca;
-  private String ca_name;
+  private String ca_name = "tcom";
   private String client_cert_name;
-  private String subject_match;
-  private String realm;
-  private String ssid;
+  private String subject_match = "-radius.cms.hu-berlin.de";
+  private String realm = "@cms.hu-berlin.de";
+  private List<String> ssids = Arrays.asList("eduroam", "eduroam_5GHz");
   private boolean busy = false;
   private Toast toast = null;
   
@@ -218,13 +219,14 @@ public class WiFiEduroam extends Activity {
     // We don't know which wrong settings existing profiles contain, just remove them
     if (configs != null) {
       for (WifiConfiguration config : configs) {
-        if (config.SSID.equals(surroundWithQuotes(ssid))) {
-                    wifiManager.removeNetwork(config.networkId);
+        for (String ssid : ssids) {
+            if (config.SSID.equals(surroundWithQuotes(ssid))) {
+                wifiManager.removeNetwork(config.networkId);
+            }
         }
       }
     }
     
-    currentConfig.SSID = surroundWithQuotes(ssid);
     currentConfig.hiddenSSID = false;
     currentConfig.priority = 40;
     currentConfig.status = WifiConfiguration.Status.DISABLED;
@@ -271,9 +273,12 @@ public class WiFiEduroam extends Activity {
       throw new RuntimeException("API version mismatch!");
     }
 
-        // add our new network
-    int networkId = wifiManager.addNetwork(currentConfig);
-    wifiManager.enableNetwork(networkId, false);
+    // add our new network
+    for (String ssid : ssids) {
+        currentConfig.SSID = surroundWithQuotes(ssid);
+        int networkId = wifiManager.addNetwork(currentConfig);
+        wifiManager.enableNetwork(networkId, false);
+    }
     wifiManager.saveConfiguration();
     
   }
@@ -326,7 +331,7 @@ public class WiFiEduroam extends Activity {
       return;
     }
     if (requestCode == 1) {
-      alert("Password", "In the next dialog, type \"" + ssid + "\" as the password.");
+      alert("Password", "In the next dialog, type \"" + ssids.get(1) + "\" as the password.");
       return;
     }
     
@@ -357,7 +362,7 @@ public class WiFiEduroam extends Activity {
       X509Certificate cert = (X509Certificate) certFactory.generateCertificate(in);
       
       
-      client_cert_name = ssid + " " + INT_CLIENT_CERT_NAME;
+      client_cert_name = ssids.get(0) + " " + INT_CLIENT_CERT_NAME;
       
       // Create a pkcs12 certificate/private key combination
       Security.addProvider(new BouncyCastleProvider());
@@ -367,14 +372,14 @@ public class WiFiEduroam extends Activity {
       keystore.setKeyEntry(client_cert_name, csr.getPrivate(), null, chain);
       
       ByteArrayOutputStream out = new ByteArrayOutputStream();
-      keystore.store(out, ssid.toCharArray());
+      keystore.store(out, ssids.get(0).toCharArray());
       out.flush();
       byte[] buffer = out.toByteArray();
       out.close();
       
       // Install the private key/client certificate combination
       Intent intent = KeyChain.createInstallIntent();
-      intent.putExtra(KeyChain.EXTRA_NAME, ssid + " " + INT_CLIENT_CERT_NAME);
+      intent.putExtra(KeyChain.EXTRA_NAME, ssids.get(0) + " " + INT_CLIENT_CERT_NAME);
       intent.putExtra(KeyChain.EXTRA_PKCS12, buffer);
       startActivityForResult(intent, 3);
     } catch (CertificateException e) {
@@ -524,11 +529,11 @@ public class WiFiEduroam extends Activity {
               }
               // Grab the information
               certificate = obj.getString("certificate");
-              ca = obj.getString("ca");
-              ca_name = obj.getString("ca_name");
-              realm = obj.getString("realm");
-              subject_match = obj.getString("subject_match");
-              ssid = obj.getString("ssid");
+              //ca = obj.getString("ca");
+              //ca_name = obj.getString("ca_name");
+              //realm = obj.getString("realm");
+              //subject_match = obj.getString("subject_match");
+              //ssid = obj.getString("ssid");
         } catch (ClientProtocolException e) {
         e.printStackTrace();
         } catch (UnknownHostException e) {
