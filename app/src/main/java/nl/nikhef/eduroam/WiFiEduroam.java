@@ -170,7 +170,7 @@ public class WiFiEduroam extends Activity {
                   @Override
                   public void run() {
                     password.setText("");
-                  };
+                  }
                 });
 
               } else {
@@ -211,8 +211,8 @@ public class WiFiEduroam extends Activity {
     }
 
     // Remove existing eduroam profiles
-        // There could possibly be more than one "eduroam" profile, which could cause errors
-        // We don't know which wrong settings existing profiles contain, just remove them
+    // There could possibly be more than one "eduroam" profile, which could cause errors
+    // We don't know which wrong settings existing profiles contain, just remove them
     if (configs != null) {
       for (WifiConfiguration config : configs) {
         if (config.SSID.equals(surroundWithQuotes(ssid))) {
@@ -550,7 +550,7 @@ public class WiFiEduroam extends Activity {
           toast.cancel();
         toast = Toast.makeText(getBaseContext(), text, Toast.LENGTH_LONG);
         toast.show();
-      };
+      }
     });
   }
   
