@@ -2,22 +2,22 @@
 <resources>
 	<string name="app_name">HU Berlin WLAN Installer</string>
 
-	<string name="TITLE_LOGON">Please logon</string>
-	<string name="Username">Username:</string>
-	<string name="Password">Password:</string>
-	<string name="Logon">Install and Connect</string>
-	<string name="WIFI_ENABLE_MSG">Wi-Fi is currently disabled. Do you want to enable it now?</string>
-	<string name="YES">Yes</string>
-	<string name="NO">No</string>	
-	<string name="NA">N/A</string>
+	<string name="TITLE_LOGON">Bitte anmelden</string>
+	<string name="Username">Nutzername:</string>
+	<string name="Password">Passwort:</string>
+	<string name="Logon">WLAN-Profil installieren / überschreiben</string>
+	<string name="WIFI_ENABLE_MSG">WLAN ist deaktiviert. Jetzt aktivieren?</string>
+	<string name="YES">Ja</string>
+	<string name="NO">Nein</string>
+	<string name="NA">Nicht verfügbar</string>
 	<string name="BSSID">BSSID</string>
 	
 	
-	<string name="ABOUT_TITLE">About</string>
-	<string name="EXIT_TITLE">Exit</string>
+	<string name="ABOUT_TITLE">Über</string>
+	<string name="EXIT_TITLE">Beenden</string>
 		
-	<string name="ABOUT_CONTENT">Nikhef eduroam Wifi helper. Small helper application to provision an EAP-TLS certificate on your device, signed using your nikhef credentials.</string>
-	<string name="UNCHANGED">Unchanged</string>
-	<string name="CHANGED">Changed</string>
+	<string name="ABOUT_CONTENT">eduroam WLAN Installer für Angehörige der Humboldt-Universität zu Berlin basierend auf "Nikhef eduroam Wifi helper". Installiert eduroam WLAN-Profil inklusive benötigten Zertifikaten.</string>
+	<string name="UNCHANGED">Unverändert</string>
+	<string name="CHANGED">Verändert</string>
     <string name="HU_LOGO">HU Logo</string>
 </resources>
