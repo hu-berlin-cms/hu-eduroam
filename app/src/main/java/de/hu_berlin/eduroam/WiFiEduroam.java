@@ -373,21 +373,6 @@ public class WiFiEduroam extends Activity {
   }
   
 
-  
-  private void alert(String title, String message) {
-    AlertDialog alertBox = new AlertDialog.Builder(this).create();
-    alertBox.setTitle(title);
-    alertBox.setMessage(message);
-    alertBox.setButton(AlertDialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener(){
-
-      @Override
-      public void onClick(DialogInterface dialog, int which) {               
-        onActivityResult(2, RESULT_OK, null);
-      }
-    });
-    alertBox.show();
-  }
-
   private void installationFinished() {
       updateStatus("Installation abgeschlossen.");
       AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
