@@ -29,9 +29,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bouncycastle.util.encoders.Base64;
-
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -52,6 +49,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.util.Base64;
+
 
 // API level 18 and up
 import android.net.wifi.WifiEnterpriseConfig;
@@ -230,7 +229,7 @@ public class WiFiEduroam extends Activity {
   private void applyAndroid43EnterpriseSettings(WifiConfiguration currentConfig, HashMap<String,String> configMap) {
     try {
       CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-      InputStream in = new ByteArrayInputStream(Base64.decode(ca.replaceAll("-----(BEGIN|END) CERTIFICATE-----", "")));
+      InputStream in = new ByteArrayInputStream(Base64.decode(ca.replaceAll("-----(BEGIN|END) CERTIFICATE-----", ""), Base64.DEFAULT));
       X509Certificate caCert = (X509Certificate) certFactory.generateCertificate(in);
     
       WifiEnterpriseConfig enterpriseConfig = new WifiEnterpriseConfig();
@@ -256,7 +255,7 @@ public class WiFiEduroam extends Activity {
     updateStatus("Inputting CA certificate.");
     Intent intent = KeyChain.createInstallIntent();
     intent.putExtra(KeyChain.EXTRA_NAME, ca_name);
-    intent.putExtra(KeyChain.EXTRA_CERTIFICATE, Base64.decode(ca.replaceAll("-----(BEGIN|END) CERTIFICATE-----", "")));
+    intent.putExtra(KeyChain.EXTRA_CERTIFICATE, Base64.decode(ca.replaceAll("-----(BEGIN|END) CERTIFICATE-----", ""), Base64.DEFAULT));
     startActivityForResult(intent, 1);
   }
 

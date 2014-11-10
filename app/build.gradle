@@ -18,6 +18,4 @@ android {
 }
 
 dependencies {
-    compile files('/home/groepeen/AndroidstudioProjects/hu-eduroam/libs/bcprov-jdk15on-151.jar')
-    compile files('/home/groepeen/AndroidstudioProjects/hu-eduroam/libs/bcpkix-jdk15on-151.jar')
 }
