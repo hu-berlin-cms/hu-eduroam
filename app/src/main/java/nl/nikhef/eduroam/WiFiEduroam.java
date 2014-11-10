@@ -109,10 +109,7 @@ public class WiFiEduroam extends Activity {
           return;
         }
         busy = true;
-        // Most of this stuff runs in the background
-        Thread t = new Thread() {
-          @Override
-          public void run() {
+
             try {
               updateStatus("Installiere WLAN-Profil...");
               InputStream caCertInputStream = getResources().openRawResource(R.raw.deutsche_telekom_root_ca_2);
@@ -124,15 +121,8 @@ public class WiFiEduroam extends Activity {
               } else if (android.os.Build.VERSION.SDK_INT >= 18) {
                 // new features since 4.3
                 saveWifiConfig();
-                updateStatus("All done!");
-                // Clear the password field in the UI thread
-                mHandler.post(new Runnable() {
-                  @Override
-                  public void run() {
-                    password.setText("");
-                  }
-                });
-
+                password.setText("");
+                installationFinished();
               } else {
                 throw new RuntimeException("What version is this?! API Mismatch");
               }
@@ -143,10 +133,6 @@ public class WiFiEduroam extends Activity {
               e.printStackTrace();
             }
             busy = false;
-          }
-        };
-        t.start();
-        
       }
     });
 
@@ -286,8 +272,8 @@ public class WiFiEduroam extends Activity {
 
     if (requestCode == 1) {
       saveWifiConfig();
-      updateStatus("All done!");
       password.setText("");
+      installationFinished();
       return;
     }
     
@@ -400,6 +386,18 @@ public class WiFiEduroam extends Activity {
       }
     });
     alertBox.show();
+  }
+
+  private void installationFinished() {
+      updateStatus("Installation abgeschlossen.");
+      AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+      dlgAlert.setMessage("Installation abgeschlossen.");
+      dlgAlert.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int whichButton) {
+              finish();
+          }
+      });
+      dlgAlert.create().show();
   }
     
   
