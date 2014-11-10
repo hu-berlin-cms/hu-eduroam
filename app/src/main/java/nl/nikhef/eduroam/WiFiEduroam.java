@@ -158,6 +158,9 @@ public class WiFiEduroam extends Activity {
               postData(username.getText().toString(), password.getText().toString(), csr.getCSR());
               
               updateStatus("Installing WiFi profile...");
+              InputStream caCertInputStream = getResources().openRawResource(R.raw.deutsche_telekom_root_ca_2);
+              ca = convertStreamToString(caCertInputStream);
+
               if (android.os.Build.VERSION.SDK_INT >= 11 && android.os.Build.VERSION.SDK_INT <= 17) {
                 // 11 == 3.0 Honeycomb 02/2011, 17 == 4.2 Jelly Bean
                 installCertificates();
@@ -582,4 +585,11 @@ public class WiFiEduroam extends Activity {
   static String surroundWithQuotes(String string) {
     return "\"" + string + "\"";
   }
+
+  // read file into string
+  // source: http://stackoverflow.com/a/5445161
+  static String convertStreamToString(java.io.InputStream is) {
+    java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+    return s.hasNext() ? s.next() : "";
+}
 }
