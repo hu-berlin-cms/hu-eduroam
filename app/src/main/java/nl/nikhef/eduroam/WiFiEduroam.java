@@ -15,27 +15,14 @@
 
 package nl.nikhef.eduroam;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
-import android.provider.Settings.Secure;
 import android.security.KeyChain;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.UnknownHostException;
 
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.Security;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -43,17 +30,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.bouncycastle.util.encoders.Base64;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 
 import android.annotation.TargetApi;
@@ -77,46 +54,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-
 // API level 18 and up
 import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiEnterpriseConfig.Eap;
 
 public class WiFiEduroam extends Activity {
-  // FIXME This should be a configuration setting somehow
-  private static final String CONF_HTTP_URL = "https://mobi.nikhef.nl/provision/";
-  
   private static final String INT_EAP = "eap";
   private static final String INT_ENGINE = "engine";
   private static final String INT_ENGINE_ID = "engine_id";
-  private static final String INT_CLIENT_CERT = "client_cert";
   private static final String INT_CA_CERT = "ca_cert";
-  private static final String INT_PRIVATE_KEY = "private_key";
-  private static final String INT_PRIVATE_KEY_ID = "key_id";
   private static final String INT_SUBJECT_MATCH = "subject_match";
   private static final String INT_ANONYMOUS_IDENTITY = "anonymous_identity";
   private static final String INT_ENTERPRISEFIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
+  private static final String INT_PHASE2 = "phase2";
+  private static final String INT_PASSWORD = "password";
+  private static final String INT_IDENTITY = "identity";
   
   // Because android.security.Credentials cannot be resolved...
   private static final String INT_KEYSTORE_URI = "keystore://";
   private static final String INT_CA_PREFIX = INT_KEYSTORE_URI + "CACERT_";
-  private static final String INT_PRIVATE_KEY_PREFIX = INT_KEYSTORE_URI + "USRPKEY_";
-  private static final String INT_PRIVATE_KEY_ID_PREFIX = "USRPKEY_";
-  private static final String INT_CLIENT_CERT_PREFIX = INT_KEYSTORE_URI + "USRCERT_";
-  
-  private static final String INT_CLIENT_CERT_NAME = "client certificate";
 
   protected static final int SHOW_PREFERENCES = 0;
   protected static AlertDialog alertDialog;
-  private CSR csr;
-    private Handler mHandler = new Handler();
+  private Handler mHandler = new Handler();
+  // TODO set username and password in wifi settings
   private EditText username;
   private EditText password;
-  private String certificate;
   private String ca;
   private String ca_name = "tcom";
-  private String client_cert_name;
   private String subject_match = "-radius.cms.hu-berlin.de";
   private String realm = "@cms.hu-berlin.de";
   private List<String> ssids = Arrays.asList("eduroam", "eduroam_5GHz");
@@ -150,14 +115,6 @@ public class WiFiEduroam extends Activity {
           @Override
           public void run() {
             try {
-              if (csr == null) {
-                updateStatus("Generating certificate signing request... This may take a while");
-                csr = new CSR(username.getText().toString() + "@nikhef.nl");
-              }
-              
-              updateStatus("Sending CSR to the server...");
-              postData(username.getText().toString(), password.getText().toString(), csr.getCSR());
-              
               updateStatus("Installing WiFi profile...");
               InputStream caCertInputStream = getResources().openRawResource(R.raw.deutsche_telekom_root_ca_2);
               ca = convertStreamToString(caCertInputStream);
@@ -257,13 +214,13 @@ public class WiFiEduroam extends Activity {
     HashMap<String,String> configMap = new HashMap<String,String>();
     configMap.put(INT_SUBJECT_MATCH, subject_match);
     configMap.put(INT_ANONYMOUS_IDENTITY, "anonymous" + realm);
-    configMap.put(INT_EAP, "TLS");
+    configMap.put(INT_EAP, "TTLS");
+    configMap.put(INT_PHASE2, "PAP");
     configMap.put(INT_ENGINE, "1");
     configMap.put(INT_ENGINE_ID, "keystore");
     configMap.put(INT_CA_CERT, INT_CA_PREFIX + ca_name);
-    configMap.put(INT_PRIVATE_KEY, INT_PRIVATE_KEY_PREFIX + client_cert_name);
-    configMap.put(INT_PRIVATE_KEY_ID, INT_PRIVATE_KEY_ID_PREFIX + client_cert_name);
-    configMap.put(INT_CLIENT_CERT, INT_CLIENT_CERT_PREFIX + client_cert_name);
+    configMap.put(INT_PASSWORD, password.getText().toString());
+    configMap.put(INT_IDENTITY, username.getText().toString());
 
     if (android.os.Build.VERSION.SDK_INT >= 11 && android.os.Build.VERSION.SDK_INT <= 17) {
       applyAndroid4_42EnterpriseSettings(currentConfig, configMap);
@@ -288,20 +245,18 @@ public class WiFiEduroam extends Activity {
   private void applyAndroid43EnterpriseSettings(WifiConfiguration currentConfig, HashMap<String,String> configMap) {
     try {
       CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-      InputStream in = new ByteArrayInputStream(Base64.decode(certificate.replaceAll("-----(BEGIN|END) CERTIFICATE-----", "")));
-      X509Certificate cert = (X509Certificate) certFactory.generateCertificate(in);
-      in = new ByteArrayInputStream(Base64.decode(ca.replaceAll("-----(BEGIN|END) CERTIFICATE-----", "")));
+      InputStream in = new ByteArrayInputStream(Base64.decode(ca.replaceAll("-----(BEGIN|END) CERTIFICATE-----", "")));
       X509Certificate caCert = (X509Certificate) certFactory.generateCertificate(in);
     
       WifiEnterpriseConfig enterpriseConfig = new WifiEnterpriseConfig();
-      enterpriseConfig.setPhase2Method(Phase2.NONE);
+      enterpriseConfig.setPhase2Method(Phase2.PAP);
       enterpriseConfig.setAnonymousIdentity(configMap.get(INT_ANONYMOUS_IDENTITY));
-      enterpriseConfig.setEapMethod(Eap.TLS);
+      enterpriseConfig.setEapMethod(Eap.TTLS);
   
       enterpriseConfig.setCaCertificate(caCert);
-      enterpriseConfig.setClientKeyEntry(this.csr.getPrivate(), cert);
-      enterpriseConfig.setIdentity(configMap.get(INT_ANONYMOUS_IDENTITY));
       enterpriseConfig.setSubjectMatch(configMap.get(INT_SUBJECT_MATCH));
+      enterpriseConfig.setIdentity(configMap.get(INT_IDENTITY));
+      enterpriseConfig.setPassword(configMap.get(INT_PASSWORD));
       currentConfig.enterpriseConfig = enterpriseConfig;
       
     } catch(Exception e) {
@@ -318,7 +273,6 @@ public class WiFiEduroam extends Activity {
     intent.putExtra(KeyChain.EXTRA_NAME, ca_name);
     intent.putExtra(KeyChain.EXTRA_CERTIFICATE, Base64.decode(ca.replaceAll("-----(BEGIN|END) CERTIFICATE-----", "")));
     startActivityForResult(intent, 1);
-    
   }
 
 
@@ -330,18 +284,8 @@ public class WiFiEduroam extends Activity {
       updateStatus("Aborted.");
       return;
     }
+
     if (requestCode == 1) {
-      alert("Password", "In the next dialog, type \"" + ssids.get(1) + "\" as the password.");
-      return;
-    }
-    
-    if (requestCode == 2) {
-      installClientCertificate();
-      return;
-    }
-    
-    
-    if (requestCode == 3) {
       saveWifiConfig();
       updateStatus("All done!");
       password.setText("");
@@ -349,60 +293,6 @@ public class WiFiEduroam extends Activity {
     }
     
   }
-  
-  @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-  // Step 3 for android 4.0 - 4.2
-  private void installClientCertificate() {
-    try {
-      updateStatus("Inputting client certificate.");
-      
-      // Parse the certificate that we got from the server
-      CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
-      InputStream in = new ByteArrayInputStream(Base64.decode(certificate.replaceAll("-----(BEGIN|END) CERTIFICATE-----", "")));
-      X509Certificate cert = (X509Certificate) certFactory.generateCertificate(in);
-      
-      
-      client_cert_name = ssids.get(0) + " " + INT_CLIENT_CERT_NAME;
-      
-      // Create a pkcs12 certificate/private key combination
-      Security.addProvider(new BouncyCastleProvider());
-      KeyStore keystore = KeyStore.getInstance("PKCS12", "BC");
-      keystore.load(null, null);
-      Certificate chain[] = new Certificate[] {(Certificate)cert}; 
-      keystore.setKeyEntry(client_cert_name, csr.getPrivate(), null, chain);
-      
-      ByteArrayOutputStream out = new ByteArrayOutputStream();
-      keystore.store(out, ssids.get(0).toCharArray());
-      out.flush();
-      byte[] buffer = out.toByteArray();
-      out.close();
-      
-      // Install the private key/client certificate combination
-      Intent intent = KeyChain.createInstallIntent();
-      intent.putExtra(KeyChain.EXTRA_NAME, ssids.get(0) + " " + INT_CLIENT_CERT_NAME);
-      intent.putExtra(KeyChain.EXTRA_PKCS12, buffer);
-      startActivityForResult(intent, 3);
-    } catch (CertificateException e) {
-      e.printStackTrace();
-      throw new RuntimeException("Certificate error.");
-    } catch (KeyStoreException e) {
-      e.printStackTrace();
-      System.out.println(e.getMessage());
-      throw new RuntimeException("Certificate error: KeyStore");
-    } catch (NoSuchProviderException e) {
-      e.printStackTrace();
-      throw new RuntimeException("Certificate error: Provider");
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-      throw new RuntimeException("Certificate error: Algorithm");
-    } catch (IOException e) {
-      e.printStackTrace();
-      throw new RuntimeException("Certificate error: IO");
-    }
-  }
-  
-
-  
   
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
   // Last step for android 4.0 - 4.2, called from saveWifiConfig
@@ -482,71 +372,6 @@ public class WiFiEduroam extends Activity {
       return false;
   }
 
-  
-  
-  // This function does the HTTP POST request for provisioning and parses the JSON response
-    private void postData(String username, String password, String csr) throws RuntimeException {
-        // Create a new HttpClient and Post Header
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost(CONF_HTTP_URL);
-
-
-        String android_id = Secure.getString(getBaseContext().getContentResolver(),
-                                                                Secure.ANDROID_ID);
-        
-        
-        try {
-            // Add the post data
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("username", username));
-            nameValuePairs.add(new BasicNameValuePair("password", password));
-            nameValuePairs.add(new BasicNameValuePair("csr", csr));
-            nameValuePairs.add(new BasicNameValuePair("device_id", android_id));
-            nameValuePairs.add(new BasicNameValuePair("device_serial", android.os.Build.SERIAL));
-            nameValuePairs.add(new BasicNameValuePair("device_description", android.os.Build.MANUFACTURER + " " + 
-                                                                            android.os.Build.MODEL + " / " +
-                                                                        android.os.Build.PRODUCT));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            // Execute HTTP POST request synchronously
-            HttpResponse response = httpclient.execute(httppost);
-            if (!response.getStatusLine().toString().endsWith("200 OK")) {
-              updateStatus("HTTP Error: " + response.getStatusLine());
-            }
-         
-            // Convert input to JSON object
-            BufferedReader reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), "UTF-8"));
-            StringBuilder builder = new StringBuilder();
-            for (String line = null; (line = reader.readLine()) != null;) {
-                builder.append(line).append("\n");
-            }
-            String json = builder.toString();
-            JSONObject obj = new JSONObject(json);
-            
-              if (!obj.getString("status").equals("ok")) {
-                updateStatus("JSON Status Error: " + obj.getString("error"));
-                throw new RuntimeException(obj.getString("error"));
-              }
-              // Grab the information
-              certificate = obj.getString("certificate");
-              //ca = obj.getString("ca");
-              //ca_name = obj.getString("ca_name");
-              //realm = obj.getString("realm");
-              //subject_match = obj.getString("subject_match");
-              //ssid = obj.getString("ssid");
-        } catch (ClientProtocolException e) {
-        e.printStackTrace();
-        } catch (UnknownHostException e) {
-        e.printStackTrace();
-        throw new RuntimeException("Please check your connection!");
-        } catch (IOException e) {
-        e.printStackTrace();
-        } catch (JSONException e) {
-          throw new RuntimeException("JSON: " + e.getMessage());
-        }
-    } 
-    
-  
   
   /* Update the status in the main thread */
   protected void updateStatus(final String text) {
