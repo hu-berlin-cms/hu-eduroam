@@ -4,7 +4,7 @@ android {
     buildToolsVersion "21.1.0"
 
     defaultConfig {
-        applicationId "nl.nikhef.eduroam"
+        applicationId "de.hu_berlin.eduroam"
         minSdkVersion 14
         targetSdkVersion 19
     }
