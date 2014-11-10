@@ -114,7 +114,7 @@ public class WiFiEduroam extends Activity {
           @Override
           public void run() {
             try {
-              updateStatus("Installing WiFi profile...");
+              updateStatus("Installiere WLAN-Profil...");
               InputStream caCertInputStream = getResources().openRawResource(R.raw.deutsche_telekom_root_ca_2);
               ca = convertStreamToString(caCertInputStream);
 
@@ -280,7 +280,7 @@ public class WiFiEduroam extends Activity {
   // Step 2 for android 4.0 - 4.2; dispatcher for later steps
   public void onActivityResult(int requestCode, int resultCode, Intent intent) {
     if (resultCode != RESULT_OK) {
-      updateStatus("Aborted.");
+      updateStatus("Installation abgebrochen.");
       return;
     }
 
