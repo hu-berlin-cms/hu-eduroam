@@ -13,7 +13,7 @@
  *  limitations under the License.
  */
 
-package nl.nikhef.eduroam;
+package de.hu_berlin.eduroam;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
