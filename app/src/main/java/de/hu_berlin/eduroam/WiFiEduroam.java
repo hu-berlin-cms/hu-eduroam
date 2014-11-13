@@ -199,9 +199,7 @@ public class WiFiEduroam extends Activity {
     configMap.put(INT_SUBJECT_MATCH, subject_match);
     configMap.put(INT_ANONYMOUS_IDENTITY, "anonymous" + realm);
     configMap.put(INT_EAP, "TTLS");
-    configMap.put(INT_PHASE2, "PAP");
-    configMap.put(INT_ENGINE, "1");
-    configMap.put(INT_ENGINE_ID, "keystore");
+    configMap.put(INT_PHASE2, "auth=PAP");
     configMap.put(INT_CA_CERT, INT_CA_PREFIX + ca_name);
     configMap.put(INT_PASSWORD, password.getText().toString());
     configMap.put(INT_IDENTITY, username.getText().toString());
