@@ -122,9 +122,13 @@ public class WiFiEduroam extends Activity {
                 installCertificates();
               } else if (android.os.Build.VERSION.SDK_INT >= 18) {
                 // new features since 4.3
-                saveWifiConfig();
+                boolean result = saveWifiConfig();
                 password.setText("");
-                installationFinished();
+                if (result)
+                    installationFinished();
+                else
+                    installationAborted();
+
               } else {
                 throw new RuntimeException("What version is this?! API Mismatch");
               }
@@ -140,7 +144,7 @@ public class WiFiEduroam extends Activity {
 
   }
 
-  private void saveWifiConfig() {
+  private boolean saveWifiConfig() {
     WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
     wifiManager.setWifiEnabled(true);
     
@@ -215,14 +219,20 @@ public class WiFiEduroam extends Activity {
       throw new RuntimeException("API version mismatch!");
     }
 
-    // add our new network
+    // add our new networks
     for (String ssid : ssids) {
         currentConfig.SSID = surroundWithQuotes(ssid);
         int networkId = wifiManager.addNetwork(currentConfig);
+        if (networkId < 0) {
+            return false;
+        }
         wifiManager.enableNetwork(networkId, false);
     }
+
     wifiManager.saveConfiguration();
-    
+
+    // everything went fine
+    return true;
   }
 
 
@@ -271,10 +281,12 @@ public class WiFiEduroam extends Activity {
     }
 
     if (requestCode == 1) {
-      saveWifiConfig();
+      boolean result = saveWifiConfig();
       password.setText("");
-      installationFinished();
-      return;
+      if (result)
+        installationFinished();
+      else
+        installationAborted();
     }
     
   }
@@ -374,14 +386,26 @@ public class WiFiEduroam extends Activity {
   
 
   private void installationFinished() {
-      updateStatus("Installation abgeschlossen.");
+      updateStatus("Installation erfolgreich abgeschlossen.");
       AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
-      dlgAlert.setMessage("Installation abgeschlossen.");
+      dlgAlert.setMessage("Installation erfolgreich abgeschlossen.");
       dlgAlert.setPositiveButton("OK",new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int whichButton) {
               finish();
           }
       });
+      dlgAlert.create().show();
+  }
+
+  private void installationAborted() {
+      updateStatus("Installation abgebrochen.");
+      AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+      dlgAlert.setMessage("Installation abgebrochen!");
+      dlgAlert.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                finish();
+            }
+        });
       dlgAlert.create().show();
   }
 
