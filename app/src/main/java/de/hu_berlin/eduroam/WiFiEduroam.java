@@ -58,8 +58,6 @@ import android.net.wifi.WifiEnterpriseConfig.Eap;
 
 public class WiFiEduroam extends Activity {
   private static final String INT_EAP = "eap";
-  private static final String INT_ENGINE = "engine";
-  private static final String INT_ENGINE_ID = "engine_id";
   private static final String INT_CA_CERT = "ca_cert";
   private static final String INT_SUBJECT_MATCH = "subject_match";
   private static final String INT_ANONYMOUS_IDENTITY = "anonymous_identity";
@@ -72,7 +70,6 @@ public class WiFiEduroam extends Activity {
   private static final String INT_KEYSTORE_URI = "keystore://";
   private static final String INT_CA_PREFIX = INT_KEYSTORE_URI + "CACERT_";
 
-  protected static final int SHOW_PREFERENCES = 0;
   protected static AlertDialog alertDialog;
   private Handler mHandler = new Handler();
   // TODO set username and password in wifi settings
@@ -151,7 +148,7 @@ public class WiFiEduroam extends Activity {
         Thread.sleep(1);
       }
       catch(InterruptedException e) {
-        continue;      
+        continue;
       }
     }
 
@@ -380,15 +377,6 @@ public class WiFiEduroam extends Activity {
           }
       });
       dlgAlert.create().show();
-  }
-    
-  
-  static String removeQuotes(String str) {
-    int len = str.length();
-    if ((len > 1) && (str.charAt(0) == '"') && (str.charAt(len - 1) == '"')) {
-      return str.substring(1, len - 1);
-    }
-    return str;
   }
 
   static String surroundWithQuotes(String string) {
