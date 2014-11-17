@@ -5,7 +5,8 @@
 	<string name="TITLE_LOGON">Bitte anmelden</string>
 	<string name="Username">Nutzername:</string>
 	<string name="Password">Passwort:</string>
-	<string name="Logon">WLAN-Profil installieren / überschreiben</string>
+    <string name="Install_exists">WLAN-Profil überschreiben</string>
+    <string name="Install_new">WLAN-Profil installieren</string>
 	<string name="WIFI_ENABLE_MSG">WLAN ist deaktiviert. Jetzt aktivieren?</string>
 	<string name="YES">Ja</string>
 	<string name="NO">Nein</string>

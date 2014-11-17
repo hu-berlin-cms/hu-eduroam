@@ -86,8 +86,14 @@ public class WiFiEduroam extends Activity {
   // Called when the activity is first created.
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);  
+    super.onCreate(savedInstanceState);
     setContentView(R.layout.logon);
+
+    // check if eduroam already exists and adjust button text
+    if (eduroamExists()) {
+        ((android.widget.Button)findViewById(R.id.button1)).setText(R.string.Install_exists);
+    }
+
     
     username = (EditText) findViewById(R.id.username);
     password = (EditText) findViewById(R.id.password);
@@ -377,6 +383,32 @@ public class WiFiEduroam extends Activity {
           }
       });
       dlgAlert.create().show();
+  }
+
+  private boolean eduroamExists() {
+      WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
+      List<WifiConfiguration> configs = null;
+      // try to get the configured networks for 10 seconds
+      for (int i = 0; i < 10 && configs == null; i++) {
+          configs = wifiManager.getConfiguredNetworks();
+          try {
+              Thread.sleep(1);
+          }
+          catch(InterruptedException e) {
+              continue;
+          }
+      }
+
+      // Are there "eduroam" profiles?
+      if (configs != null) {
+          for (WifiConfiguration config : configs) {
+                  if (config.SSID.equals(surroundWithQuotes("eduroam"))) {
+                      return true;
+                  }
+          }
+      }
+
+      return false;
   }
 
   static String surroundWithQuotes(String string) {
