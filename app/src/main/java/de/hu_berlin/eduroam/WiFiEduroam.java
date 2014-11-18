@@ -15,33 +15,25 @@
 
 package de.hu_berlin.eduroam;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import android.security.KeyChain;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiEnterpriseConfig;
+import android.net.wifi.WifiEnterpriseConfig.Eap;
 import android.net.wifi.WifiEnterpriseConfig.Phase2;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.security.KeyChain;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,12 +41,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.util.Base64;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 // API level 18 and up
-import android.net.wifi.WifiEnterpriseConfig;
-import android.net.wifi.WifiEnterpriseConfig.Eap;
 
 public class WiFiEduroam extends Activity {
   private static final String INT_EAP = "eap";
@@ -65,6 +63,7 @@ public class WiFiEduroam extends Activity {
   private static final String INT_PHASE2 = "phase2";
   private static final String INT_PASSWORD = "password";
   private static final String INT_IDENTITY = "identity";
+  private static final String TAG = "hu-eduroam";
   
   // Because android.security.Credentials cannot be resolved...
   private static final String INT_KEYSTORE_URI = "keystore://";
@@ -94,7 +93,6 @@ public class WiFiEduroam extends Activity {
         ((android.widget.Button)findViewById(R.id.button1)).setText(R.string.Install_exists);
     }
 
-    
     username = (EditText) findViewById(R.id.username);
     password = (EditText) findViewById(R.id.password);
     
@@ -113,6 +111,8 @@ public class WiFiEduroam extends Activity {
         busy = true;
 
             try {
+              unlockCredentialStorage();
+
               updateStatus("Installiere WLAN-Profil...");
               InputStream caCertInputStream = getResources().openRawResource(R.raw.deutsche_telekom_root_ca_2);
               ca = convertStreamToString(caCertInputStream);
@@ -142,6 +142,18 @@ public class WiFiEduroam extends Activity {
       }
     });
 
+  }
+
+  private void unlockCredentialStorage() {
+      try {
+          if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+              startActivityForResult(new Intent("android.credentials.UNLOCK"),2);
+          } else {
+              startActivityForResult(new Intent("com.android.credentials.UNLOCK"),2);
+          }
+      } catch (ActivityNotFoundException e) {
+          Log.e(TAG, "No UNLOCK activity: " + e.getMessage(), e);
+      }
   }
 
   private boolean saveWifiConfig() {
