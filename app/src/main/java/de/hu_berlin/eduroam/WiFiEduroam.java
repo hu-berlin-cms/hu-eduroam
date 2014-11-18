@@ -73,7 +73,6 @@ public class WiFiEduroam extends Activity {
 
   protected static AlertDialog alertDialog;
   private Handler mHandler = new Handler();
-  // TODO set username and password in wifi settings
   private EditText username;
   private EditText password;
   private String ca;
@@ -212,7 +211,7 @@ public class WiFiEduroam extends Activity {
             }
         });
 
-        Log.d("hu-eduroam", "Couldn't activate wifi.");
+        Log.d(TAG, "Couldn't activate wifi.");
     }
     
     WifiConfiguration currentConfig = new WifiConfiguration();
