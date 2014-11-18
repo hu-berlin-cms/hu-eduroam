@@ -236,7 +236,7 @@ public class WiFiEduroam extends Activity {
       for (WifiConfiguration config : configs) {
         for (String ssid : ssids) {
             if (config.SSID.equals(surroundWithQuotes(ssid))) {
-                //wifiManager.removeNetwork(config.networkId);
+                wifiManager.removeNetwork(config.networkId);
             }
         }
       }
