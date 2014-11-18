@@ -19,7 +19,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.admin.DevicePolicyManager;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -157,6 +159,28 @@ public class WiFiEduroam extends Activity {
       }
   }
 
+    private boolean isDeviceSecured() {
+        String LOCKSCREEN_UTILS = "com.android.internal.widget.LockPatternUtils";
+        try {
+            Class<?> lockUtilsClass = Class.forName(LOCKSCREEN_UTILS);
+            // "this" is a Context, in my case an Activity
+            Object lockUtils = lockUtilsClass.getConstructor(Context.class).newInstance(this);
+
+            Method method = lockUtilsClass.getMethod("getActivePasswordQuality");
+
+            int lockProtectionLevel = (Integer)method.invoke(lockUtils); // Thank you esme_louise for the cast hint
+
+            if(lockProtectionLevel >= DevicePolicyManager.PASSWORD_QUALITY_NUMERIC) {
+                return true;
+            }
+        }
+        catch (Exception e) {
+            Log.e(TAG, "ex:"+e);
+        }
+
+        return false;
+  }
+
   private boolean saveWifiConfig() {
     WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
     wifiManager.setWifiEnabled(true);
@@ -182,7 +206,7 @@ public class WiFiEduroam extends Activity {
       for (WifiConfiguration config : configs) {
         for (String ssid : ssids) {
             if (config.SSID.equals(surroundWithQuotes(ssid))) {
-                wifiManager.removeNetwork(config.networkId);
+                //wifiManager.removeNetwork(config.networkId);
             }
         }
       }
@@ -414,6 +438,9 @@ public class WiFiEduroam extends Activity {
       updateStatus("Installation abgebrochen.");
       AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
       dlgAlert.setMessage("Installation abgebrochen!");
+      if (!isDeviceSecured()) {
+          dlgAlert.setMessage("Sie müssen einen PIN-Schutz einrichten!");
+      }
       dlgAlert.setPositiveButton("OK",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 finish();
