@@ -111,8 +111,6 @@ public class WiFiEduroam extends Activity {
         busy = true;
 
             try {
-              unlockCredentialStorage();
-
               updateStatus("Installiere WLAN-Profil...");
               InputStream caCertInputStream = getResources().openRawResource(R.raw.deutsche_telekom_root_ca_2);
               ca = convertStreamToString(caCertInputStream);
@@ -122,13 +120,16 @@ public class WiFiEduroam extends Activity {
                 installCertificates();
               } else if (android.os.Build.VERSION.SDK_INT >= 18) {
                 // new features since 4.3
+                unlockCredentialStorage();
+
+                /*
                 boolean result = saveWifiConfig();
                 password.setText("");
                 if (result)
                     installationFinished();
                 else
                     installationAborted();
-
+                */
               } else {
                 throw new RuntimeException("What version is this?! API Mismatch");
               }
@@ -287,19 +288,19 @@ public class WiFiEduroam extends Activity {
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
   // Step 2 for android 4.0 - 4.2; dispatcher for later steps
   public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-    if (resultCode != RESULT_OK) {
-      updateStatus("Installation abgebrochen.");
-      return;
-    }
+    //if (requestCode == 1) {
+      if (requestCode == 1 && resultCode != RESULT_OK) {
+          updateStatus("Installation abgebrochen.");
+          return;
+      }
 
-    if (requestCode == 1) {
       boolean result = saveWifiConfig();
       password.setText("");
       if (result)
         installationFinished();
       else
         installationAborted();
-    }
+    //}
     
   }
   
