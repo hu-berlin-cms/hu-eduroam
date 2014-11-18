@@ -164,7 +164,7 @@ public class WiFiEduroam extends Activity {
     WifiConfiguration currentConfig = new WifiConfiguration();
     
     List<WifiConfiguration> configs = null;
-    // try to get the configured networks for 10 seconds
+    // try to get the configured networks for 10ms
     for (int i = 0; i < 10 && configs == null; i++) {
       configs = wifiManager.getConfiguredNetworks();
       try {
@@ -425,7 +425,7 @@ public class WiFiEduroam extends Activity {
   private boolean eduroamExists() {
       WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
       List<WifiConfiguration> configs = null;
-      // try to get the configured networks for 10 seconds
+      // try to get the configured networks for 10ms
       for (int i = 0; i < 10 && configs == null; i++) {
           configs = wifiManager.getConfiguredNetworks();
           try {
