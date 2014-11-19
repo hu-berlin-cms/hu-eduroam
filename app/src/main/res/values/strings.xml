@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">HU Berlin WLAN Installer</string>
+    <string name="app_name">HU Berlin WLAN Installer</string>
 
-	<string name="TITLE_LOGON">Bitte anmelden</string>
-	<string name="Username">HU-Account*:</string>
-	<string name="Password">Passwort:</string>
+    <string name="TITLE_LOGON">Bitte anmelden</string>
+    <string name="Username">HU-Account*:</string>
+    <string name="Password">Passwort:</string>
     <string name="Install_exists">WLAN-Profil überschreiben</string>
     <string name="Install_new">WLAN-Profil installieren</string>
-	<string name="WIFI_ENABLE_MSG">WLAN ist deaktiviert. Jetzt aktivieren?</string>
-	<string name="YES">Ja</string>
-	<string name="NO">Nein</string>
-	<string name="NA">Nicht verfügbar</string>
-	<string name="BSSID">BSSID</string>
-	
-	
-	<string name="ABOUT_TITLE">Über</string>
-	<string name="EXIT_TITLE">Beenden</string>
-		
-	<string name="ABOUT_CONTENT">eduroam WLAN Installer für Angehörige der Humboldt-Universität zu Berlin basierend auf "Nikhef eduroam Wifi helper". Installiert eduroam WLAN-Profil inklusive benötigten Zertifikaten.</string>
-	<string name="UNCHANGED">Unverändert</string>
-	<string name="CHANGED">Verändert</string>
+    <string name="WIFI_ENABLE_MSG">WLAN ist deaktiviert. Jetzt aktivieren?</string>
+    <string name="YES">Ja</string>
+    <string name="NO">Nein</string>
+    <string name="NA">Nicht verfügbar</string>
+    <string name="BSSID">BSSID</string>
+
+    <string name="ABOUT_TITLE">Über</string>
+    <string name="EXIT_TITLE">Beenden</string>
+
+    <string name="ABOUT_CONTENT">eduroam WLAN Installer für Angehörige der Humboldt-Universität zu Berlin basierend auf "Nikhef eduroam Wifi helper". Installiert eduroam WLAN-Profil inklusive benötigten Zertifikaten.</string>
+    <string name="UNCHANGED">Unverändert</string>
+    <string name="CHANGED">Verändert</string>
     <string name="HU_LOGO">HU Logo</string>
     <string name="USERNAME_HINT">*Angehörige der Informatik, Mathematik und Physik müssen Ihre Domain mit angeben.</string>
 </resources>

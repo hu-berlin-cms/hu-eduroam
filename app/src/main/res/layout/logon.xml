@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/logonLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context=".WiFiEduroam"
     android:background="#fff"
-    android:id="@+id/logonLayout"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:gravity="center_horizontal">
+    tools:context=".WiFiEduroam">
 
     <ImageView
         android:id="@+id/imageView1"
@@ -19,94 +19,93 @@
         android:src="@drawable/husiegel_bw_klein" />
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="TESTVERSION"
-        android:id="@+id/textView"
         android:layout_gravity="center_horizontal"
+        android:text="TESTVERSION"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="#ffff0000" />
 
     <TableLayout
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-
-		<TableRow
-	        android:id="@+id/tableRow1"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:id="@+id/username_label"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/Username"
-	            android:textColor="#000" />
-	
-	        <EditText
-	            android:id="@+id/username"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:ems="10"
-	            android:inputType="text"
-	            android:padding="5dp"
-	            android:textColor="#000"
-	            android:textCursorDrawable="@null"
-	            android:background="@drawable/rectangle">
-	
-	            <requestFocus />
-	        </EditText>
-	    </TableRow>
-	
-	    <TableRow
-	        android:id="@+id/tableRow2"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content" >
-	
-	        <TextView
-	            android:id="@+id/password_label"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="@string/Password"
-	            android:textColor="#000000" />
-	
-	        <EditText
-	            android:id="@+id/password"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:ems="10"
-	            android:inputType="textPassword"
-	            android:padding="5dp"
-	            android:textColor="#000"
-	            android:textCursorDrawable="@null"
-	            android:background="@drawable/rectangle"
-	             />
-	
-	    </TableRow>
-	
-	    <TableRow
-	        android:id="@+id/tableRow3"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:gravity="center_vertical|center_horizontal" >
-
-        </TableRow>
-	</TableLayout>
-
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="@string/USERNAME_HINT"
+        android:layout_gravity="center_horizontal">
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/username_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Username"
+                android:textColor="#000" />
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rectangle"
+                android:ems="10"
+                android:inputType="text"
+                android:padding="5dp"
+                android:textColor="#000"
+                android:textCursorDrawable="@null">
+
+                <requestFocus />
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/password_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Password"
+                android:textColor="#000000" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rectangle"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:padding="5dp"
+                android:textColor="#000"
+                android:textCursorDrawable="@null" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal">
+
+        </TableRow>
+    </TableLayout>
+
+    <TextView
         android:id="@+id/username_hint"
-        android:layout_gravity="center_horizontal" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/USERNAME_HINT"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/Install_new"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:text="@string/Install_new" />
 
 </LinearLayout>
