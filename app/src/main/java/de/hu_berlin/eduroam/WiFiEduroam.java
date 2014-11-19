@@ -19,6 +19,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
+import android.app.KeyguardManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -161,25 +162,35 @@ public class WiFiEduroam extends Activity {
   }
 
     private boolean isDeviceSecured() {
-        String LOCKSCREEN_UTILS = "com.android.internal.widget.LockPatternUtils";
-        try {
-            Class<?> lockUtilsClass = Class.forName(LOCKSCREEN_UTILS);
-            // "this" is a Context, in my case an Activity
-            Object lockUtils = lockUtilsClass.getConstructor(Context.class).newInstance(this);
+        // use appropriate API method where possible
+        if (android.os.Build.VERSION.SDK_INT >= 16) {
+            // Get a reference to the KEYGUARD_SERVICE
+            KeyguardManager keyguardManager = (KeyguardManager) this.getSystemService(Context.KEYGUARD_SERVICE);
+            // Query the keyguard security
+            return keyguardManager.isKeyguardSecure();
+        } else {
+            // source: http://stackoverflow.com/a/25291077/1381638
+            // could check against isLockPasswordEnabled() and isLockPatternEnabled()
+            // but PASSWORD_QUALITY_NUMERIC seems fine. Couldn't enter a lower quality password on my Android 4.4.4
+            String LOCKSCREEN_UTILS = "com.android.internal.widget.LockPatternUtils";
+            try {
+                Class<?> lockUtilsClass = Class.forName(LOCKSCREEN_UTILS);
+                // "this" is a Context, in my case an Activity
+                Object lockUtils = lockUtilsClass.getConstructor(Context.class).newInstance(this);
 
-            Method method = lockUtilsClass.getMethod("getActivePasswordQuality");
+                Method method = lockUtilsClass.getMethod("getActivePasswordQuality");
 
-            int lockProtectionLevel = (Integer)method.invoke(lockUtils); // Thank you esme_louise for the cast hint
+                int lockProtectionLevel = (Integer) method.invoke(lockUtils); // Thank you esme_louise for the cast hint
 
-            if(lockProtectionLevel >= DevicePolicyManager.PASSWORD_QUALITY_NUMERIC) {
-                return true;
+                if (lockProtectionLevel >= DevicePolicyManager.PASSWORD_QUALITY_NUMERIC) {
+                    return true;
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "ex:" + e);
             }
-        }
-        catch (Exception e) {
-            Log.e(TAG, "ex:"+e);
-        }
 
-        return false;
+            return false;
+        }
   }
 
   private boolean saveWifiConfig() {
@@ -468,7 +479,7 @@ public class WiFiEduroam extends Activity {
       AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
       dlgAlert.setMessage("Installation abgebrochen!");
       if (!isDeviceSecured()) {
-          dlgAlert.setMessage("Sie müssen einen PIN-Schutz einrichten!");
+          dlgAlert.setMessage("Installation wegen unsicherer Display-Sperre fehlgeschlagen. Setzen Sie eine Display-Sperre mit PIN, Passwort oder Muster!");
       }
       dlgAlert.setPositiveButton("OK",new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
