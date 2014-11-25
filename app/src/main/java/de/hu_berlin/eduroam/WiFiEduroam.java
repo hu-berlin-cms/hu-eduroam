@@ -190,19 +190,7 @@ public class WiFiEduroam extends Activity {
         }
 
         if (!wifiManager.isWifiEnabled()) {
-            mHandler.post(new Runnable() {
-                public void run() {
-                    AlertDialog.Builder dlgAlert = new AlertDialog.Builder(WiFiEduroam.this);
-                    dlgAlert.setMessage("WLAN konnte nicht aktiviert werden. Bitte aktivieren und erneut versuchen.");
-                    dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            finish();
-                        }
-                    });
-                    dlgAlert.create().show();
-                }
-            });
-
+            showDialogAndFinish("WLAN konnte nicht aktiviert werden. Bitte aktivieren und erneut versuchen.");
             Log.d(TAG, "Couldn't activate wifi.");
         }
 
@@ -450,29 +438,16 @@ public class WiFiEduroam extends Activity {
 
     private void installationFinished() {
         updateStatus("Installation erfolgreich abgeschlossen.");
-        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-        dlgAlert.setMessage("Installation erfolgreich abgeschlossen.");
-        dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                finish();
-            }
-        });
-        dlgAlert.create().show();
+        showDialogAndFinish("Installation erfolgreich abgeschlossen.");
     }
 
     private void installationAborted() {
         updateStatus("Installation abgebrochen.");
-        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(this);
-        dlgAlert.setMessage("Installation abgebrochen!");
-        if (!isDeviceSecured()) {
-            dlgAlert.setMessage("Installation wegen unsicherer Display-Sperre fehlgeschlagen. Setzen Sie eine Display-Sperre mit PIN, Passwort oder Muster!");
+        if (isDeviceSecured()) {
+            showDialogAndFinish("Installation abgebrochen!");
+        } else {
+            showDialogAndFinish("Installation wegen unsicherer Display-Sperre fehlgeschlagen. Setzen Sie eine Display-Sperre mit PIN, Passwort oder Muster!");
         }
-        dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                finish();
-            }
-        });
-        dlgAlert.create().show();
     }
 
     private boolean eduroamExists() {
@@ -498,6 +473,21 @@ public class WiFiEduroam extends Activity {
         }
 
         return false;
+    }
+
+    private void showDialogAndFinish(final String msg) {
+        mHandler.post(new Runnable() {
+            public void run(){
+              AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(WiFiEduroam.this);
+              dlgAlert.setMessage(msg);
+              dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                  finish();
+                }
+              });
+              dlgAlert.create().show();
+            }
+        });
     }
 
     static String surroundWithQuotes(String string) {
