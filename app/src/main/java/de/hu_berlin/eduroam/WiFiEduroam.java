@@ -83,14 +83,12 @@ public class WiFiEduroam extends Activity {
     private List<String> ssids = Arrays.asList("eduroam", "eduroam_5GHz");
     private boolean busy = false;
     private Toast toast = null;
-    private Handler voodoo = null;
 
     // Called when the activity is first created.
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.logon);
-        voodoo = new Handler();
 
         // check if eduroam already exists and adjust button text
         if (eduroamExists()) {
