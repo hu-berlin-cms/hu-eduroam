@@ -173,7 +173,7 @@ public class WiFiEduroam extends Activity {
         }
     }
 
-    private boolean saveWifiConfig() {
+    private void saveWifiConfig() {
         WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
 
@@ -192,6 +192,7 @@ public class WiFiEduroam extends Activity {
         if (!wifiManager.isWifiEnabled()) {
             showDialogAndFinish("WLAN konnte nicht aktiviert werden. Bitte aktivieren und erneut versuchen.");
             Log.d(TAG, "Couldn't activate wifi.");
+            return;
         }
 
         WifiConfiguration currentConfig = new WifiConfiguration();
@@ -268,7 +269,12 @@ public class WiFiEduroam extends Activity {
             currentConfig.SSID = surroundWithQuotes(ssid);
             int networkId = wifiManager.addNetwork(currentConfig);
             if (networkId < 0) {
-                return false;
+                // it didn't work out
+
+                // cleanup after install try
+                cleanupAfterInstallRun();
+                installationAborted();
+                return;
             }
             wifiManager.enableNetwork(networkId, false);
         }
@@ -276,7 +282,9 @@ public class WiFiEduroam extends Activity {
         wifiManager.saveConfiguration();
 
         // everything went fine
-        return true;
+        // cleanup after install
+        cleanupAfterInstallRun();
+        installationFinished();
     }
 
 
@@ -326,19 +334,13 @@ public class WiFiEduroam extends Activity {
 
         Log.d(TAG, "device secured?: " + this.isDeviceSecured());
 
-        boolean result = saveWifiConfig();
-
-        // clear password field
-        password.setText("");
-
-        // reenable button
-        final Button myButton = (Button) findViewById(R.id.button1);
-        myButton.setEnabled(true);
-
-        if (result)
-            installationFinished();
-        else
-            installationAborted();
+        // save wifi config in worker thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                saveWifiConfig();
+            }
+        }).start();
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -486,6 +488,19 @@ public class WiFiEduroam extends Activity {
                 }
               });
               dlgAlert.create().show();
+            }
+        });
+    }
+
+    private void cleanupAfterInstallRun() {
+        mHandler.post(new Runnable() {
+            public void run(){
+                // clear password field
+                password.setText("");
+
+                // reenable button
+                final Button myButton = (Button) findViewById(R.id.button1);
+                myButton.setEnabled(true);
             }
         });
     }
