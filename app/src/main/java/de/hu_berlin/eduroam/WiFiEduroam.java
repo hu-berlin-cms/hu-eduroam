@@ -72,7 +72,6 @@ public class WiFiEduroam extends Activity {
     private static final String INT_KEYSTORE_URI = "keystore://";
     private static final String INT_CA_PREFIX = INT_KEYSTORE_URI + "CACERT_";
 
-    protected static AlertDialog alertDialog;
     private Handler mHandler = new Handler();
     private EditText username;
     private EditText password;
@@ -81,7 +80,6 @@ public class WiFiEduroam extends Activity {
     private String subject_match = "-radius.cms.hu-berlin.de";
     private String realm = "@cms.hu-berlin.de";
     private List<String> ssids = Arrays.asList("eduroam", "eduroam_5GHz");
-    private boolean busy = false;
     private Toast toast = null;
 
     // Called when the activity is first created.
@@ -98,19 +96,15 @@ public class WiFiEduroam extends Activity {
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
 
-        alertDialog = new AlertDialog.Builder(this).create();
-
-        Button myButton = (Button) findViewById(R.id.button1);
+        final Button myButton = (Button) findViewById(R.id.button1);
         if (myButton == null)
             throw new RuntimeException("button1 not found. Odd");
 
 
         myButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View _v) {
-                if (busy) {
-                    return;
-                }
-                busy = true;
+                // disable button when running
+                myButton.setEnabled(false);
 
                 try {
                     updateStatus("Installiere WLAN-Profil...");
@@ -132,7 +126,6 @@ public class WiFiEduroam extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                busy = false;
             }
         });
     }
@@ -346,7 +339,14 @@ public class WiFiEduroam extends Activity {
         Log.d(TAG, "device secured?: " + this.isDeviceSecured());
 
         boolean result = saveWifiConfig();
+
+        // clear password field
         password.setText("");
+
+        // reenable button
+        final Button myButton = (Button) findViewById(R.id.button1);
+        myButton.setEnabled(true);
+
         if (result)
             installationFinished();
         else
