@@ -468,7 +468,7 @@ public class WiFiEduroam extends Activity {
         // Are there "eduroam" profiles?
         if (configs != null) {
             for (WifiConfiguration config : configs) {
-                if (config.SSID.equals(surroundWithQuotes("eduroam"))) {
+                if (config.SSID.equals(surroundWithQuotes(ssids.get(0)))) {
                     return true;
                 }
             }
