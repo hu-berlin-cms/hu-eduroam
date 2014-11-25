@@ -343,6 +343,8 @@ public class WiFiEduroam extends Activity {
             return;
         }
 
+        Log.d(TAG, "device secured?: " + this.isDeviceSecured());
+
         boolean result = saveWifiConfig();
         password.setText("");
         if (result)
