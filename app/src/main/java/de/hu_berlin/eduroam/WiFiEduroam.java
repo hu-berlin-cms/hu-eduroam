@@ -186,9 +186,11 @@ public class WiFiEduroam extends Activity {
         WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
 
-        // wait 2 seconds for wifi to get enabled
+        // wait 5 seconds for wifi to get enabled
         // busy wait is bad, but I didn't find a better approach
-        for (int i = 0; i < 20 && !wifiManager.isWifiEnabled(); i++) {
+        for (int i = 0; i < 50 && !wifiManager.isWifiEnabled(); i++) {
+            if (i == 10)
+                updateStatus("Warte auf Aktivierung WLAN...");
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
