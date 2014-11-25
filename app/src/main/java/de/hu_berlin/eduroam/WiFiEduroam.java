@@ -107,7 +107,7 @@ public class WiFiEduroam extends Activity {
                 myButton.setEnabled(false);
 
                 try {
-                    updateStatus("Installiere WLAN-Profil...");
+                    updateStatus(getString(R.string.STATUS_INSTALL_PROFILE));
                     InputStream caCertInputStream = getResources().openRawResource(R.raw.deutsche_telekom_root_ca_2);
                     ca = convertStreamToString(caCertInputStream);
 
@@ -181,7 +181,7 @@ public class WiFiEduroam extends Activity {
         // busy wait is bad, but I didn't find a better approach
         for (int i = 0; i < 50 && !wifiManager.isWifiEnabled(); i++) {
             if (i == 10)
-                updateStatus("Warte auf Aktivierung WLAN...");
+                updateStatus(getString(R.string.STATUS_WIFI_WAIT));
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -190,7 +190,7 @@ public class WiFiEduroam extends Activity {
         }
 
         if (!wifiManager.isWifiEnabled()) {
-            showDialogAndFinish("WLAN konnte nicht aktiviert werden. Bitte aktivieren und erneut versuchen.");
+            showDialogAndFinish(getString(R.string.INST_ABORTED_WIFI_ENABLE));
             Log.d(TAG, "Couldn't activate wifi.");
             return;
         }
@@ -315,7 +315,7 @@ public class WiFiEduroam extends Activity {
     // Step 1 for android 4.0 - 4.2
     private void installCertificates() {
         // Install the CA certificate
-        updateStatus("Inputting CA certificate.");
+        updateStatus(getString(R.string.STATUS_IMPORT_CA_CERT));
         Intent intent = KeyChain.createInstallIntent();
         intent.putExtra(KeyChain.EXTRA_NAME, ca_name);
         intent.putExtra(KeyChain.EXTRA_CERTIFICATE, Base64.decode(ca.replaceAll("-----(BEGIN|END) CERTIFICATE-----", ""), Base64.DEFAULT));
@@ -328,7 +328,7 @@ public class WiFiEduroam extends Activity {
     // Step 2 for android 4.0 - 4.2; dispatcher for later steps
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 1 && resultCode != RESULT_OK) {
-            updateStatus("Installation abgebrochen.");
+            updateStatus(getString(R.string.INST_ABORTED));
             return;
         }
 
@@ -439,16 +439,16 @@ public class WiFiEduroam extends Activity {
 
 
     private void installationFinished() {
-        updateStatus("Installation erfolgreich abgeschlossen.");
-        showDialogAndFinish("Installation erfolgreich abgeschlossen.");
+        updateStatus(getString(R.string.INST_FINISHED));
+        showDialogAndFinish(getString(R.string.INST_FINISHED));
     }
 
     private void installationAborted() {
-        updateStatus("Installation abgebrochen.");
+        updateStatus(getString(R.string.INST_ABORTED));
         if (isDeviceSecured()) {
-            showDialogAndFinish("Installation abgebrochen!");
+            showDialogAndFinish(getString(R.string.INST_ABORTED));
         } else {
-            showDialogAndFinish("Installation wegen unsicherer Display-Sperre fehlgeschlagen. Setzen Sie eine Display-Sperre mit PIN, Passwort oder Muster!");
+            showDialogAndFinish(getString(R.string.INST_ABORTED_LOCK));
         }
     }
 
@@ -482,7 +482,7 @@ public class WiFiEduroam extends Activity {
             public void run(){
               AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(WiFiEduroam.this);
               dlgAlert.setMessage(msg);
-              dlgAlert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+              dlgAlert.setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                   finish();
                 }
