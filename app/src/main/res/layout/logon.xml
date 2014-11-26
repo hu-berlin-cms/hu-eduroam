@@ -85,27 +85,31 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/tableRow3"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal">
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/username_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/USERNAME_HINT"
+                android:layout_span="2"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/secondary_text_dark" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Install_new"
+                android:layout_column="1"
+                android:layout_gravity="left" />
         </TableRow>
     </TableLayout>
-
-    <TextView
-        android:id="@+id/username_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/USERNAME_HINT"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/Install_new" />
 
 </LinearLayout>
