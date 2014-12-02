@@ -26,15 +26,6 @@
         android:layout_width="fill_parent"
         android:layout_height="60dp" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="TESTVERSION"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="#ffff0000" />
-
     <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
