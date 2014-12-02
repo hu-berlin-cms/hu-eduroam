@@ -248,7 +248,7 @@ public class WiFiEduroam extends Activity {
 
         // Enterprise Settings
         HashMap<String, String> configMap = new HashMap<String, String>();
-        //configMap.put(INT_SUBJECT_MATCH, subject_match);
+        configMap.put(INT_SUBJECT_MATCH, subject_match);
         configMap.put(INT_ANONYMOUS_IDENTITY, "anonymous" + realm);
         configMap.put(INT_EAP, "TTLS");
         configMap.put(INT_PHASE2, "auth=PAP");
@@ -301,7 +301,7 @@ public class WiFiEduroam extends Activity {
             enterpriseConfig.setEapMethod(Eap.TTLS);
 
             enterpriseConfig.setCaCertificate(caCert);
-            //enterpriseConfig.setSubjectMatch(configMap.get(INT_SUBJECT_MATCH));
+            enterpriseConfig.setSubjectMatch(configMap.get(INT_SUBJECT_MATCH));
             enterpriseConfig.setIdentity(configMap.get(INT_IDENTITY));
             enterpriseConfig.setPassword(configMap.get(INT_PASSWORD));
             currentConfig.enterpriseConfig = enterpriseConfig;
