@@ -107,10 +107,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/Install_new"
                 android:layout_column="1"
-                android:layout_gravity="left"
-                android:background="#ff606569"
-                android:paddingLeft="5dp"
-                android:paddingRight="2dp" />
+                android:layout_gravity="left" />
         </TableRow>
     </TableLayout>
 
