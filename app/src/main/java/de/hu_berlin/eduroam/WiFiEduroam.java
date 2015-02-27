@@ -53,8 +53,11 @@ import java.lang.reflect.Method;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.text.DateFormat;
+import java.util.TimeZone;
 
 // API level 18 and up
 
@@ -420,7 +423,7 @@ public class WiFiEduroam extends Activity {
             case R.id.troubleshoot:
                 builder.setTitle(getString(R.string.TROUBLESHOOT_TITLE));
                 builder.setMessage(getString(R.string.TROUBLESHOOT_CONTENT) +
-                        "\n" + getString(R.string.MAC_ADDRESS) + ": " + getMacAddress());
+                        getTroubleshootingInfo());
                 builder.setPositiveButton(getString(android.R.string.ok), null);
                 builder.show();
 
@@ -526,10 +529,12 @@ public class WiFiEduroam extends Activity {
         return s.hasNext() ? s.next() : "";
     }
 
-    private String getMacAddress() {
+    private String getTroubleshootingInfo() {
         // get mac address
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
+
+        String result = "";
 
         // wait 2 seconds for wifi to get enabled
         // busy wait is bad, but I didn't find a better approach
@@ -543,11 +548,34 @@ public class WiFiEduroam extends Activity {
 
         if (wifiManager.isWifiEnabled()) {
             WifiInfo connInfo = wifiManager.getConnectionInfo();
-            return connInfo.getMacAddress();
+
+            DateFormat time_fmt = DateFormat.getDateTimeInstance();
+            time_fmt.setTimeZone(TimeZone.getTimeZone("UTC")); // always use UTC
+            String cur_time = time_fmt.format(new Date());
+            result += "\n" + getString(R.string.TIME) + ": " + cur_time + " UTC";
+
+            String macAddress = connInfo.getMacAddress();
+            if (macAddress == null) {
+                macAddress = getString(R.string.ERR_NOT_FOUND);
+            }
+            result += "\n" + getString(R.string.MAC_ADDRESS) + ": " + macAddress;
+
+            String ssid = connInfo.getSSID();
+            if (ssid == null) {
+                ssid = getString(R.string.ERR_NOT_FOUND);
+            }
+            result += "\n" + getString(R.string.SSID) + ": " + ssid;
+
+            String bssid = connInfo.getBSSID();
+            if (bssid == null) {
+                bssid = getString(R.string.ERR_NOT_FOUND);
+            }
+            result += "\n" + getString(R.string.AP) + ": " + bssid;
         } else {
-            return getString(R.string.ERR_NOT_FOUND);
+            result = "\n" + getString(R.string.ERR_NO_TROUBLESHOOT);
         }
 
-
+        return result;
     }
+
 }

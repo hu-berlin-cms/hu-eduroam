@@ -32,4 +32,8 @@
     <string name="MAC_ADDRESS">mac address</string>
     <string name="TROUBLESHOOT_CONTENT">In case of problems our helpdesk (Benutzerberatung) will try to help (030209370000, oper@cms.hu-berlin.de).\n\nHelpful information:</string>
     <string name="ERR_NOT_FOUND">Could not determined</string>
+    <string name="AP">Access Point</string>
+    <string name="SSID">WiFi</string>
+    <string name="ERR_NO_TROUBLESHOOT">Couldn\'t activate wifi to collect debug information.</string>
+    <string name="TIME">Time</string>
 </resources>

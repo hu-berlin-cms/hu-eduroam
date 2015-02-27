@@ -32,4 +32,8 @@
     <string name="STATUS_INSTALL_PROFILE">Installiere WLAN-Profil...</string>
     <string name="MAC_ADDRESS">Mac-Adresse</string>
     <string name="ERR_NOT_FOUND">Konnte nicht ermittelt werden.</string>
+    <string name="ERR_NO_TROUBLESHOOT">WLAN-Karte konnte nicht aktiviert werden, um Informationen zu sammeln.</string>
+    <string name="AP">Access Point</string>
+    <string name="SSID">WLAN</string>
+    <string name="TIME">Zeit</string>
 </resources>
