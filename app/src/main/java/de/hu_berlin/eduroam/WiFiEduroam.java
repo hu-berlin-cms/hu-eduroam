@@ -30,6 +30,7 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiEnterpriseConfig.Eap;
 import android.net.wifi.WifiEnterpriseConfig.Phase2;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -416,6 +417,15 @@ public class WiFiEduroam extends Activity {
 
                 return true;
 
+            case R.id.troubleshoot:
+                builder.setTitle(getString(R.string.TROUBLESHOOT_TITLE));
+                builder.setMessage(getString(R.string.TROUBLESHOOT_CONTENT) +
+                        "\n" + getString(R.string.MAC_ADDRESS) + ": " + getMacAddress());
+                builder.setPositiveButton(getString(android.R.string.ok), null);
+                builder.show();
+
+                return true;
+
             case R.id.exit:
                 System.exit(0);
         }
@@ -514,5 +524,30 @@ public class WiFiEduroam extends Activity {
     static String convertStreamToString(java.io.InputStream is) {
         java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
+    }
+
+    private String getMacAddress() {
+        // get mac address
+        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        wifiManager.setWifiEnabled(true);
+
+        // wait 2 seconds for wifi to get enabled
+        // busy wait is bad, but I didn't find a better approach
+        for (int i = 0; i < 20 && !wifiManager.isWifiEnabled(); i++) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                continue;
+            }
+        }
+
+        if (wifiManager.isWifiEnabled()) {
+            WifiInfo connInfo = wifiManager.getConnectionInfo();
+            return connInfo.getMacAddress();
+        } else {
+            return getString(R.string.ERR_NOT_FOUND);
+        }
+
+
     }
 }

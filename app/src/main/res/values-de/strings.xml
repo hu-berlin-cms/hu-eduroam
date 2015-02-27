@@ -14,9 +14,11 @@
     <string name="BSSID">BSSID</string>
 
     <string name="ABOUT_TITLE">Über</string>
+    <string name="TROUBLESHOOT_TITLE">Störungssuche</string>
     <string name="EXIT_TITLE">Beenden</string>
 
     <string name="ABOUT_CONTENT">eduroam WLAN Installer für Angehörige der Humboldt-Universität zu Berlin basierend auf "Nikhef eduroam Wifi helper". Installiert eduroam WLAN-Profil inklusive benötigten Zertifikaten.</string>
+    <string name="TROUBLESHOOT_CONTENT">Bei Problemen wenden Sie sich an die Benutzerberatung (030209370000, oper@cms.hu-berlin.de).\n\nNützliche Informationen:</string>
     <string name="UNCHANGED">Unverändert</string>
     <string name="CHANGED">Verändert</string>
     <string name="HU_LOGO">HU Logo</string>
@@ -28,4 +30,6 @@
     <string name="STATUS_IMPORT_CA_CERT">Importiere CA-Zertifikat...</string>
     <string name="STATUS_WIFI_WAIT">Warte auf Aktivierung WLAN...</string>
     <string name="STATUS_INSTALL_PROFILE">Installiere WLAN-Profil...</string>
+    <string name="MAC_ADDRESS">Mac-Adresse</string>
+    <string name="ERR_NOT_FOUND">Konnte nicht ermittelt werden.</string>
 </resources>
