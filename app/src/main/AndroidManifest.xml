@@ -15,7 +15,8 @@
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name">
+        android:label="@string/app_name"
+        android:theme="@style/HUdesign">
         <activity
             android:name="de.hu_berlin.eduroam.WiFiEduroam"
             android:label="@string/app_name">

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/logonLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#fff"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".WiFiEduroam"
+    android:clickable="false">
+
+    <Space
+        android:layout_width="fill_parent"
+        android:layout_height="10dp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:contentDescription="@string/HU_LOGO"
+        android:padding="10dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/husiegel_bw_klein" />
+
+    <Space
+        android:layout_width="fill_parent"
+        android:layout_height="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Username"
+        android:id="@+id/username_label"
+        android:layout_gravity="start"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#10336f"
+        android:layout_marginLeft="48dp"
+        android:textSize="30dp" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textNoSuggestions"
+        android:textColor="#000"
+        android:padding="5dp"
+        android:textCursorDrawable="@null"
+        android:ems="10"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:textSize="30dp">
+    </EditText>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Password"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#10336f"
+        android:id="@+id/password_label"
+        android:layout_gravity="start"
+        android:layout_marginLeft="48dp"
+        android:textSize="30dp" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:textCursorDrawable="@null"
+        android:padding="5dp"
+        android:textColor="#000"
+        android:layout_marginTop="5dp"
+        android:textIsSelectable="false"
+        android:layout_marginBottom="10dp"
+        android:textSize="30dp" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Install_new"
+        android:background="#dbdbdb"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_marginTop="30dp"
+        android:allowUndo="false"
+        android:textSize="30dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:id="@+id/username_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/USERNAME_HINT"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/secondary_text_dark"
+        android:layout_gravity="start"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="20dp"
+        android:textSize="30dp" />
+
+</LinearLayout>
