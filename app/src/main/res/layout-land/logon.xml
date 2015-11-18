@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/logonLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#fff"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".WiFiEduroam"
+    android:clickable="false">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="1"
+        android:layout_gravity="left"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="110dp"
+            android:layout_height="fill_parent"
+            android:contentDescription="@string/HU_LOGO"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/husiegel_bw_klein"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Username"
+                android:id="@+id/username_label"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#10336f"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="20dp" />
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textNoSuggestions"
+                android:textColor="#000"
+                android:padding="5dp"
+                android:textCursorDrawable="@null"
+                android:ems="10"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="30dp">
+            </EditText>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Password"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#10336f"
+                android:id="@+id/password_label"
+                android:layout_marginLeft="15dp"
+                android:layout_gravity="left" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:textCursorDrawable="@null"
+                android:padding="5dp"
+                android:textColor="#000"
+                android:layout_marginTop="5dp"
+                android:textIsSelectable="false"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="left"
+                android:layout_marginLeft="30dp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Install_new"
+            android:background="#dbdbdb"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:allowUndo="false"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/username_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/USERNAME_HINT"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/secondary_text_dark"
+        android:layout_gravity="start"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="20dp" />
+
+</LinearLayout>
