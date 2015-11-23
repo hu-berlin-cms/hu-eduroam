@@ -14,90 +14,105 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="1"
-        android:layout_gravity="left"
         android:layout_marginTop="10dp">
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="110dp"
-            android:layout_height="fill_parent"
-            android:contentDescription="@string/HU_LOGO"
-            android:padding="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/husiegel_bw_klein"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:weightSum="1"
             android:layout_gravity="left"
-            android:layout_weight="1">
+            android:layout_weight="0.7"
+            android:layout_marginLeft="10dp">
 
-            <TextView
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Username"
+                        android:id="@+id/username_label"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#10336f" />
+
+                    <EditText
+                        android:id="@+id/username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textNoSuggestions"
+                        android:textColor="#000"
+                        android:padding="5dp"
+                        android:textCursorDrawable="@null"
+                        android:ems="10"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="30dp">
+                    </EditText>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Password"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#10336f"
+                        android:id="@+id/password_label"
+                        android:layout_gravity="left" />
+
+                    <EditText
+                        android:id="@+id/password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPassword"
+                        android:textCursorDrawable="@null"
+                        android:padding="5dp"
+                        android:textColor="#000"
+                        android:layout_marginTop="5dp"
+                        android:textIsSelectable="false"
+                        android:layout_marginBottom="10dp"
+                        android:layout_gravity="left"
+                        android:layout_marginLeft="30dp" />
+                </TableRow>
+
+            </TableLayout>
+
+            <Button
+                android:id="@+id/button1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/Username"
-                android:id="@+id/username_label"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#10336f"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="20dp" />
+                android:text="@string/Install_new"
+                android:background="#dbdbdb"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:allowUndo="false"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp" />
 
-            <EditText
-                android:id="@+id/username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textNoSuggestions"
-                android:textColor="#000"
-                android:padding="5dp"
-                android:textCursorDrawable="@null"
-                android:ems="10"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="30dp">
-            </EditText>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/Password"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#10336f"
-                android:id="@+id/password_label"
-                android:layout_marginLeft="15dp"
-                android:layout_gravity="left" />
-
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPassword"
-                android:textCursorDrawable="@null"
-                android:padding="5dp"
-                android:textColor="#000"
-                android:layout_marginTop="5dp"
-                android:textIsSelectable="false"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="left"
-                android:layout_marginLeft="30dp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Install_new"
-            android:background="#dbdbdb"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:allowUndo="false"
-            android:layout_gravity="center"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp" />
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="110dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/HU_LOGO"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/husiegel_bw_klein"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.3" />
     </LinearLayout>
 
     <TextView
