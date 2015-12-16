@@ -78,8 +78,7 @@
         android:paddingLeft="15dp"
         android:paddingRight="15dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="5dp"
-        android:allowUndo="false" />
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:id="@+id/username_hint"
