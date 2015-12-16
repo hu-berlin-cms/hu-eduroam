@@ -81,7 +81,6 @@
                         android:layout_marginTop="5dp"
                         android:textIsSelectable="false"
                         android:layout_marginBottom="10dp"
-                        android:layout_gravity="left"
                         android:layout_marginLeft="30dp" />
                 </TableRow>
 
@@ -95,9 +94,7 @@
                 android:background="#dbdbdb"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:allowUndo="false"
-                android:layout_gravity="center"
-                android:layout_marginRight="10dp"
+                android:layout_gravity="right"
                 android:layout_marginLeft="10dp" />
 
         </LinearLayout>
