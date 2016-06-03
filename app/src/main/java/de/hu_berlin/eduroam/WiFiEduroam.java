@@ -36,6 +36,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.security.KeyChain;
+import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
@@ -553,6 +554,15 @@ public class WiFiEduroam extends Activity {
             time_fmt.setTimeZone(TimeZone.getTimeZone("UTC")); // always use UTC
             String cur_time = time_fmt.format(new Date());
             result += "\n" + getString(R.string.TIME) + ": " + cur_time + " UTC";
+
+            // deprecated but easy, see http://stackoverflow.com/q/16730711/1381638
+            int ip = connInfo.getIpAddress();
+            String ipAddress = Formatter.formatIpAddress(ip);
+            if (ipAddress == null) {
+                ipAddress = getString(R.string.ERR_NOT_FOUND);
+            }
+            result += "\n" + getString(R.string.IP_ADDRESS) + ": " + ipAddress;
+
 
             String macAddress = connInfo.getMacAddress();
             if (macAddress == null) {

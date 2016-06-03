@@ -36,4 +36,5 @@
     <string name="AP">Access Point</string>
     <string name="SSID">WLAN</string>
     <string name="TIME">Zeit</string>
+    <string name="IP_ADDRESS">IP-Adresse</string>
 </resources>
