@@ -555,6 +555,40 @@ public class WiFiEduroam extends Activity {
             String cur_time = time_fmt.format(new Date());
             result += "\n" + getString(R.string.TIME) + ": " + cur_time + " UTC";
 
+            // get uid
+            String uid = null;
+            if (android.os.Build.VERSION.SDK_INT >= 18) {
+                int netid = connInfo.getNetworkId();
+                if (netid > -1) {
+                    // we are connected
+                    List<WifiConfiguration> configs = null;
+                    // try to get the configured networks for 10ms
+                    for (int i = 0; i < 10 && configs == null; i++) {
+                        configs = wifiManager.getConfiguredNetworks();
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException e) {
+                            continue;
+                        }
+                    }
+
+                    if (configs != null) {
+                        for (WifiConfiguration config : configs) {
+                            if (config.networkId == netid) {
+                                uid = config.enterpriseConfig.getIdentity();
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (uid == null || uid == "") {
+                uid = getString(R.string.ERR_NOT_FOUND);
+            }
+            result += "\n" + getString(R.string.uid) + ": " + uid;
+
+
+
             // deprecated but easy, see http://stackoverflow.com/q/16730711/1381638
             int ip = connInfo.getIpAddress();
             String ipAddress = Formatter.formatIpAddress(ip);

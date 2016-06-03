@@ -37,4 +37,5 @@
     <string name="ERR_NO_TROUBLESHOOT">Couldn\'t activate wifi to collect debug information.</string>
     <string name="TIME">Time</string>
     <string name="IP_ADDRESS">ip address</string>
+    <string name="uid">account</string>
 </resources>

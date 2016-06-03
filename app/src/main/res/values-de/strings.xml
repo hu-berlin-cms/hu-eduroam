@@ -37,4 +37,5 @@
     <string name="SSID">WLAN</string>
     <string name="TIME">Zeit</string>
     <string name="IP_ADDRESS">IP-Adresse</string>
+    <string name="uid">Account</string>
 </resources>
