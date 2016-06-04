@@ -1,41 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">HU Berlin Wifi Installer</string>
+    <string name="app_name">HU Berlin Wi-Fi Installer</string>
 
     <string name="TITLE_LOGON">Please login</string>
     <string name="Username">HU-Account*:</string>
     <string name="Password">Password:</string>
-    <string name="Install_exists">Overwrite wifi profile</string>
-    <string name="Install_new">Install wifi profile</string>
-    <string name="WIFI_ENABLE_MSG">Wifi disabled. Activate it?</string>
+    <string name="Install_exists">Overwrite Wi-Fi profile</string>
+    <string name="Install_new">Install Wi-Fi profile</string>
+    <string name="WIFI_ENABLE_MSG">Wi-Fi disabled. Activate it?</string>
     <string name="YES">Yes</string>
     <string name="NO">No</string>
     <string name="NA">N/A</string>
     <string name="BSSID">BSSID</string>
+    <string name="ABORT">Abort</string>
 
     <string name="ABOUT_TITLE">About</string>
     <string name="TROUBLESHOOT_TITLE">Troubleshooting</string>
     <string name="EXIT_TITLE">Exit</string>
 
-    <string name="ABOUT_CONTENT">eduroam Wifi installer for members of Humboldt University Berlin. This installer is based on "Nikhef eduroam Wifi helper". It installs an eduroam Wifi profile and the necessary certificates.</string>
+    <string name="ABOUT_CONTENT">eduroam Wi-Fi installer for members of Humboldt University Berlin. This installer is based on "Nikhef eduroam Wi-Fi helper". It installs an eduroam Wi-Fi profile and the necessary certificates.</string>
     <string name="UNCHANGED">Unchanged</string>
     <string name="CHANGED">Changed</string>
     <string name="HU_LOGO">HU Logo</string>
     <string name="USERNAME_HINT">*Members of the institutes of Computer Science, Mathematics or Physics have to append their domain.</string>
     <string name="INST_ABORTED">Installation aborted!</string>
     <string name="INST_ABORTED_LOCK">Installation aborted because of unsecure display lock. Please install a display lock using PIN, password or pattern!</string>
-    <string name="INST_ABORTED_WIFI_ENABLE">Couldn\'t enable Wifi! Please enable Wifi and try again.</string>
+    <string name="INST_ABORTED_WIFI_ENABLE">Couldn\'t enable Wi-Fi! Please enable Wi-Fi and try again.</string>
     <string name="INST_FINISHED">Installation finished successfully.</string>
     <string name="STATUS_IMPORT_CA_CERT">Importing ca certificate...</string>
-    <string name="STATUS_WIFI_WAIT">Waiting for Wifi to get enabled...</string>
-    <string name="STATUS_INSTALL_PROFILE">Installing Wifi profile...</string>
+    <string name="STATUS_WIFI_WAIT">Waiting for Wi-Fi to get enabled...</string>
+    <string name="STATUS_INSTALL_PROFILE">Installing Wi-Fi profile...</string>
     <string name="MAC_ADDRESS">mac address</string>
     <string name="TROUBLESHOOT_CONTENT">In case of problems our helpdesk (Benutzerberatung) will try to help (030209370000, oper@cms.hu-berlin.de).\n\nHelpful information:</string>
     <string name="ERR_NOT_FOUND">Could not be determined</string>
     <string name="AP">Access Point</string>
-    <string name="SSID">WiFi</string>
-    <string name="ERR_NO_TROUBLESHOOT">Couldn\'t activate wifi to collect debug information.</string>
+    <string name="SSID">Wi-Fi</string>
+    <string name="ERR_NO_TROUBLESHOOT">Couldn\'t activate Wi-Fi to collect debug information.</string>
     <string name="TIME">Time</string>
     <string name="IP_ADDRESS">ip address</string>
     <string name="uid">account</string>
+    <string name="DLG_WIFI_REMOVE">Could not remove Wi-Fi profile for \"%1$s\".\n\nSince Android 6.0 (Marshmallow) you have to remove already existing Wi-Fi profiles manually, because the app is only allowed to remove profiles it created.\n\nPlease remove profiles for the following Wi-Fi networks:\n%2$s\n\nTo do this long press on the matching entry and tap on \"Forget network\". Press the back button of your device afterwards.</string>
+    <string name="WIFI_SETTINGS">Open Wi-Fi preferences</string>
 </resources>

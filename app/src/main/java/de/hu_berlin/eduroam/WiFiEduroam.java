@@ -35,6 +35,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.security.KeyChain;
 import android.text.format.Formatter;
 import android.util.Base64;
@@ -220,7 +221,10 @@ public class WiFiEduroam extends Activity {
             for (WifiConfiguration config : configs) {
                 for (String ssid : ssids) {
                     if (config.SSID.equals(surroundWithQuotes(ssid))) {
-                        wifiManager.removeNetwork(config.networkId);
+                        if (!wifiManager.removeNetwork(config.networkId)) {
+                            showWifiSettingsDialog(config.SSID, ssids);
+                            return;
+                        }
                     }
                 }
             }
@@ -502,6 +506,27 @@ public class WiFiEduroam extends Activity {
                 }
               });
               dlgAlert.create().show();
+            }
+        });
+    }
+
+    private void showWifiSettingsDialog(final String cur_ssid, final List<String> ssids) {
+        mHandler.post(new Runnable() {
+            public void run(){
+                final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(WiFiEduroam.this);
+                dlgAlert.setMessage(String.format(getString(R.string.DLG_WIFI_REMOVE), cur_ssid,  android.text.TextUtils.join("\n", ssids)));
+                dlgAlert.setPositiveButton(getString(R.string.WIFI_SETTINGS), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                        startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), 3);
+                    }
+                });
+                dlgAlert.setNegativeButton(getString(R.string.ABORT), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        finish();
+                    }
+                });
+                dlgAlert.create().show();
             }
         });
     }

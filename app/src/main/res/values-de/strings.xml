@@ -12,6 +12,7 @@
     <string name="NO">Nein</string>
     <string name="NA">Nicht verfügbar</string>
     <string name="BSSID">BSSID</string>
+    <string name="ABORT">Abbrechen</string>
 
     <string name="ABOUT_TITLE">Über</string>
     <string name="TROUBLESHOOT_TITLE">Störungssuche</string>
@@ -38,4 +39,6 @@
     <string name="TIME">Zeit</string>
     <string name="IP_ADDRESS">IP-Adresse</string>
     <string name="uid">Account</string>
+    <string name="DLG_WIFI_REMOVE">Konnte WLAN-Profil "%1$s" nicht entfernen.\n\nSeit Android 6.0 (Marshmallow) müssen Sie bereits existierende WLAN-Profile selbst entfernen, weil die App nur auf Ihre eigenen Profile zugreifen darf.\n\nBitte entfernen Sie bereits vorhandene WLAN-Profile für die folgenden Netzwerke:\n%2$s\n\nDazu müssen Sie in den WLAN-Einstellungen lange auf das jeweilige WLAN tippen und dann \"Netzwerk entfernen\" antippen. Drücken Sie anschließend auf den Zurück-Button Ihres Geräts.</string>
+    <string name="WIFI_SETTINGS">WLAN-Einstellungen öffnen</string>
 </resources>
