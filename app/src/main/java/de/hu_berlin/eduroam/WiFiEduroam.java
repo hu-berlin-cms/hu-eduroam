@@ -48,7 +48,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -623,8 +627,22 @@ public class WiFiEduroam extends Activity {
             result += "\n" + getString(R.string.IP_ADDRESS) + ": " + ipAddress;
 
 
-            String macAddress = connInfo.getMacAddress();
-            if (macAddress == null) {
+            String macAddress = null;
+            if (android.os.Build.VERSION.SDK_INT < 23) {
+                macAddress = connInfo.getMacAddress();
+            } else {
+                // dirty hack for Marshmallow
+                try {
+                    File file = new File("/sys/class/net/wlan0/address");
+                    BufferedReader br = new BufferedReader(new FileReader(file));
+                    macAddress = br.readLine();
+                    br.close() ;
+                } catch (IOException e) {
+                    // at least we tried...
+                }
+            }
+
+            if (macAddress == null || macAddress == "02:00:00:00:00:00") {
                 macAddress = getString(R.string.ERR_NOT_FOUND);
             }
             result += "\n" + getString(R.string.MAC_ADDRESS) + ": " + macAddress;
