@@ -11,6 +11,8 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
+ *
+ *  This file has been modified by Enno Gröper.
  */
 
 package de.hu_berlin.eduroam;
@@ -124,9 +126,17 @@ public class WiFiEduroam extends Activity {
                     if (android.os.Build.VERSION.SDK_INT >= 11 && android.os.Build.VERSION.SDK_INT <= 17) {
                         // 11 == 3.0 Honeycomb 02/2011, 17 == 4.2 Jelly Bean
                         installCertificates();
-                    } else if (android.os.Build.VERSION.SDK_INT >= 18) {
+                    } else if (android.os.Build.VERSION.SDK_INT >= 18 && android.os.Build.VERSION.SDK_INT < 23) {
                         // new features since 4.3
                         unlockCredentialStorage();
+                    } else if (android.os.Build.VERSION.SDK_INT >=  23) {
+                        // no need to unlock credential storage?
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                saveWifiConfig();
+                            }
+                        }).start();
                     } else {
                         throw new RuntimeException("What version is this?! API Mismatch");
                     }
