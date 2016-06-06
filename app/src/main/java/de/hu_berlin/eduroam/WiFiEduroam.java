@@ -93,6 +93,7 @@ public class WiFiEduroam extends Activity {
     private String realm = "@cms.hu-berlin.de";
     private List<String> ssids = Arrays.asList("eduroam", "eduroam_5GHz");
     private Toast toast = null;
+    private boolean display_lock_exists = false;
 
     // Called when the activity is first created.
     @Override
@@ -123,20 +124,16 @@ public class WiFiEduroam extends Activity {
                     InputStream caCertInputStream = getResources().openRawResource(R.raw.deutsche_telekom_root_ca_2);
                     ca = convertStreamToString(caCertInputStream);
 
+                    if (isDeviceSecured()) {
+                        display_lock_exists = true;
+                    }
+
                     if (android.os.Build.VERSION.SDK_INT >= 11 && android.os.Build.VERSION.SDK_INT <= 17) {
                         // 11 == 3.0 Honeycomb 02/2011, 17 == 4.2 Jelly Bean
                         installCertificates();
-                    } else if (android.os.Build.VERSION.SDK_INT >= 18 && android.os.Build.VERSION.SDK_INT < 23) {
+                    } else if (android.os.Build.VERSION.SDK_INT >= 18) {
                         // new features since 4.3
                         unlockCredentialStorage();
-                    } else if (android.os.Build.VERSION.SDK_INT >=  23) {
-                        // no need to unlock credential storage?
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                saveWifiConfig();
-                            }
-                        }).start();
                     } else {
                         throw new RuntimeException("What version is this?! API Mismatch");
                     }
@@ -307,7 +304,8 @@ public class WiFiEduroam extends Activity {
         // everything went fine
         // cleanup after install
         cleanupAfterInstallRun();
-        installationFinished();
+        //installationFinished(!display_lock_exists && android.os.Build.VERSION.SDK_INT >= 23);
+        installationFinished(!display_lock_exists);
     }
 
 
@@ -350,6 +348,10 @@ public class WiFiEduroam extends Activity {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     // Step 2 for android 4.0 - 4.2; dispatcher for later steps
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        // after opening security settings dialog
+        if (requestCode == 4) {
+            finish();
+        }
         if (requestCode == 1 && resultCode != RESULT_OK) {
             updateStatus(getString(R.string.INST_ABORTED));
             return;
@@ -470,9 +472,13 @@ public class WiFiEduroam extends Activity {
     }
 
 
-    private void installationFinished() {
+    private void installationFinished(boolean new_lock) {
         updateStatus(getString(R.string.INST_FINISHED));
-        showDialogAndFinish(getString(R.string.INST_FINISHED));
+        if (new_lock) {
+            showDisplayLockSettingsDialog();
+        } else {
+            showDialogAndFinish(getString(R.string.INST_FINISHED));
+        }
     }
 
     private void installationAborted() {
@@ -520,6 +526,27 @@ public class WiFiEduroam extends Activity {
                 }
               });
               dlgAlert.create().show();
+            }
+        });
+    }
+
+    private void showDisplayLockSettingsDialog() {
+        mHandler.post(new Runnable() {
+            public void run(){
+                final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(WiFiEduroam.this);
+                dlgAlert.setMessage(getString(R.string.INST_FINISHED_REMOVE_LOCK));
+                dlgAlert.setPositiveButton(getString(R.string.SECURITY_SETTINGS), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        dialog.dismiss();
+                        startActivityForResult(new Intent(Settings.ACTION_SECURITY_SETTINGS), 4);
+                    }
+                });
+                dlgAlert.setNegativeButton(getString(R.string.EXIT), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        finish();
+                    }
+                });
+                dlgAlert.create().show();
             }
         });
     }

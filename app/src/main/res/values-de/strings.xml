@@ -16,7 +16,7 @@
 
     <string name="ABOUT_TITLE">Über</string>
     <string name="TROUBLESHOOT_TITLE">Störungssuche</string>
-    <string name="EXIT_TITLE">Beenden</string>
+    <string name="EXIT">Beenden</string>
 
     <string name="ABOUT_CONTENT">eduroam WLAN Installer für Angehörige der Humboldt-Universität zu Berlin basierend auf "Nikhef eduroam Wifi helper". Installiert eduroam WLAN-Profil inklusive benötigten Zertifikaten.</string>
     <string name="TROUBLESHOOT_CONTENT">Bei Problemen wenden Sie sich an die Benutzerberatung (030209370000, oper@cms.hu-berlin.de).\n\nNützliche Informationen:</string>
@@ -41,4 +41,6 @@
     <string name="uid">Account</string>
     <string name="DLG_WIFI_REMOVE">Konnte WLAN-Profil "%1$s" nicht entfernen.\n\nSeit Android 6.0 (Marshmallow) müssen Sie bereits existierende WLAN-Profile selbst entfernen, weil die App nur auf Ihre eigenen Profile zugreifen darf.\n\nBitte entfernen Sie bereits vorhandene WLAN-Profile für die folgenden Netzwerke:\n%2$s\n\nDazu müssen Sie in den WLAN-Einstellungen lange auf das jeweilige WLAN tippen und dann \"Netzwerk entfernen\" antippen. Drücken Sie anschließend auf den Zurück-Button Ihres Geräts.</string>
     <string name="WIFI_SETTINGS">WLAN-Einstellungen öffnen</string>
+    <string name="INST_FINISHED_REMOVE_LOCK">Installation erfolgreich abgeschlossen.\n\nWenn Sie möchten, können Sie die Displaysperre jetzt wieder entfernen. Sie wird unter Android 6.0 nur während der Installation benötigt.\n\nÖffnen Sie dazu die Sicherheitseinstellungen und ändern Sie den Sperrbildschirmtyp auf \"streichen\".</string>
+    <string name="SECURITY_SETTINGS">Sicherheitseinstellungen öffnen</string>
 </resources>

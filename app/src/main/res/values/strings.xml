@@ -16,7 +16,7 @@
 
     <string name="ABOUT_TITLE">About</string>
     <string name="TROUBLESHOOT_TITLE">Troubleshooting</string>
-    <string name="EXIT_TITLE">Exit</string>
+    <string name="EXIT">Exit</string>
 
     <string name="ABOUT_CONTENT">eduroam Wi-Fi installer for members of Humboldt University Berlin. This installer is based on "Nikhef eduroam Wi-Fi helper". It installs an eduroam Wi-Fi profile and the necessary certificates.</string>
     <string name="UNCHANGED">Unchanged</string>
@@ -41,4 +41,6 @@
     <string name="uid">account</string>
     <string name="DLG_WIFI_REMOVE">Could not remove Wi-Fi profile for \"%1$s\".\n\nSince Android 6.0 (Marshmallow) you have to remove already existing Wi-Fi profiles manually, because the app is only allowed to remove profiles it created.\n\nPlease remove profiles for the following Wi-Fi networks:\n%2$s\n\nTo do this long press on the matching entry and tap on \"Forget network\". Press the back button of your device afterwards.</string>
     <string name="WIFI_SETTINGS">Open Wi-Fi preferences</string>
+    <string name="INST_FINISHED_REMOVE_LOCK">Installation finished successfully.\n\nYou may now remove the screen lock, if you like. Under Android 6.0 it is only needed during the installation process.\nTo remove screen lock, open security settings and change lock screen type to "swipe".</string>
+    <string name="SECURITY_SETTINGS">Open Security Settings</string>
 </resources>
