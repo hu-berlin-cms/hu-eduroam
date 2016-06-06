@@ -658,7 +658,7 @@ public class WiFiEduroam extends Activity {
             // deprecated but easy, see http://stackoverflow.com/q/16730711/1381638
             int ip = connInfo.getIpAddress();
             String ipAddress = Formatter.formatIpAddress(ip);
-            if (ipAddress == null) {
+            if (ipAddress == null || ipAddress == "0.0.0.0") {
                 ipAddress = getString(R.string.ERR_NOT_FOUND);
             }
             result += "\n" + getString(R.string.IP_ADDRESS) + ": " + ipAddress;
