@@ -304,8 +304,7 @@ public class WiFiEduroam extends Activity {
         // everything went fine
         // cleanup after install
         cleanupAfterInstallRun();
-        //installationFinished(!display_lock_exists && android.os.Build.VERSION.SDK_INT >= 23);
-        installationFinished(!display_lock_exists);
+        installationFinished(!display_lock_exists && android.os.Build.VERSION.SDK_INT >= 23);
     }
 
 
@@ -351,6 +350,7 @@ public class WiFiEduroam extends Activity {
         // after opening security settings dialog
         if (requestCode == 4) {
             finish();
+            return;
         }
         if (requestCode == 1 && resultCode != RESULT_OK) {
             updateStatus(getString(R.string.INST_ABORTED));
