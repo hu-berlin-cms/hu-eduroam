@@ -17,6 +17,7 @@
 
 package de.hu_berlin.eduroam;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -428,10 +429,14 @@ public class WiFiEduroam extends Activity {
                     e.printStackTrace();
                 }
                 builder.setTitle(getString(R.string.ABOUT_TITLE));
-                builder.setMessage(getString(R.string.ABOUT_CONTENT) +
-                        "\n\n" + pi.packageName + "\n" +
-                        "V" + pi.versionName +
-                        "C" + pi.versionCode);
+                if (pi == null) {
+                    builder.setMessage(getString(R.string.ABOUT_CONTENT));
+                } else {
+                    builder.setMessage(getString(R.string.ABOUT_CONTENT) +
+                            "\n\n" + pi.packageName + "\n" +
+                            "V" + pi.versionName +
+                            "C" + pi.versionCode);
+                }
                 builder.setPositiveButton(getString(android.R.string.ok), null);
                 builder.show();
 
@@ -592,6 +597,7 @@ public class WiFiEduroam extends Activity {
         return s.hasNext() ? s.next() : "";
     }
 
+    @SuppressLint("HardwareIds")
     private String getTroubleshootingInfo() {
         // get mac address
         WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -644,7 +650,7 @@ public class WiFiEduroam extends Activity {
                     }
                 }
             }
-            if (uid == null || uid == "") {
+            if (uid == null || uid.equals("")) {
                 uid = getString(R.string.ERR_NOT_FOUND);
             }
             result += "\n" + getString(R.string.uid) + ": " + uid;
