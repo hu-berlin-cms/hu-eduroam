@@ -191,7 +191,7 @@ public class WiFiEduroam extends Activity {
     }
 
     private void saveWifiConfig() {
-        WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
 
         // wait 5 seconds for wifi to get enabled
@@ -491,7 +491,7 @@ public class WiFiEduroam extends Activity {
     }
 
     private boolean eduroamExists() {
-        WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(WIFI_SERVICE);
         List<WifiConfiguration> configs = null;
         // try to get the configured networks for 10ms
         for (int i = 0; i < 10 && configs == null; i++) {
@@ -598,7 +598,7 @@ public class WiFiEduroam extends Activity {
 
     private String getTroubleshootingInfo() {
         // get mac address
-        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(true);
 
         String result = "";
