@@ -128,7 +128,7 @@ public class WiFiEduroam extends Activity {
                         display_lock_exists = true;
                     }
 
-                    if (android.os.Build.VERSION.SDK_INT >= 11 && android.os.Build.VERSION.SDK_INT <= 17) {
+                    if (android.os.Build.VERSION.SDK_INT >= 14 && android.os.Build.VERSION.SDK_INT <= 17) {
                         // 11 == 3.0 Honeycomb 02/2011, 17 == 4.2 Jelly Bean
                         installCertificates();
                     } else if (android.os.Build.VERSION.SDK_INT >= 18) {
@@ -149,11 +149,7 @@ public class WiFiEduroam extends Activity {
 
     private void unlockCredentialStorage() {
         try {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                startActivityForResult(new Intent("android.credentials.UNLOCK"), 2);
-            } else {
-                startActivityForResult(new Intent("com.android.credentials.UNLOCK"), 2);
-            }
+            startActivityForResult(new Intent("com.android.credentials.UNLOCK"), 2);
         } catch (ActivityNotFoundException e) {
             Log.e(TAG, "No UNLOCK activity: " + e.getMessage(), e);
         }
@@ -276,7 +272,7 @@ public class WiFiEduroam extends Activity {
         configMap.put(INT_PASSWORD, password.getText().toString());
         configMap.put(INT_IDENTITY, username.getText().toString());
 
-        if (android.os.Build.VERSION.SDK_INT >= 11 && android.os.Build.VERSION.SDK_INT <= 17) {
+        if (android.os.Build.VERSION.SDK_INT >= 14 && android.os.Build.VERSION.SDK_INT <= 17) {
             applyAndroid4_42EnterpriseSettings(currentConfig, configMap);
         } else if (android.os.Build.VERSION.SDK_INT >= 18) {
             applyAndroid43EnterpriseSettings(currentConfig, configMap);
