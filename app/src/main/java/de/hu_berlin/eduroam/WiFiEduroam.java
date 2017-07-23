@@ -318,7 +318,12 @@ public class WiFiEduroam extends Activity {
             enterpriseConfig.setEapMethod(Eap.TTLS);
 
             enterpriseConfig.setCaCertificate(caCert);
-            enterpriseConfig.setSubjectMatch(configMap.get(INT_SUBJECT_MATCH));
+            if (android.os.Build.VERSION.SDK_INT >= 23) {
+                enterpriseConfig.setAltSubjectMatch(configMap.get(INT_SUBJECT_MATCH));
+            } else {
+                //noinspection deprecation
+                enterpriseConfig.setSubjectMatch(configMap.get(INT_SUBJECT_MATCH));
+            }
             enterpriseConfig.setIdentity(configMap.get(INT_IDENTITY));
             enterpriseConfig.setPassword(configMap.get(INT_PASSWORD));
             currentConfig.enterpriseConfig = enterpriseConfig;
