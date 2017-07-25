@@ -74,6 +74,7 @@ public class WiFiEduroam extends Activity {
     private static final String INT_EAP = "eap";
     private static final String INT_CA_CERT = "ca_cert";
     private static final String INT_SUBJECT_MATCH = "subject_match";
+    private static final String INT_ALT_SUBJECT_MATCH = "alt_subject_match";
     private static final String INT_ANONYMOUS_IDENTITY = "anonymous_identity";
     private static final String INT_ENTERPRISEFIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
     private static final String INT_PHASE2 = "phase2";
@@ -91,6 +92,7 @@ public class WiFiEduroam extends Activity {
     private String ca;
     private String ca_name = "tcom";
     private String subject_match = "-radius.cms.hu-berlin.de";
+    private String alt_subject_match = "DNS:srv1-radius.cms.hu-berlin.de;DNS:srv2-radius.cms.hu-berlin.de";
     private String realm = "@cms.hu-berlin.de";
     private List<String> ssids = Arrays.asList("eduroam", "eduroam_5GHz");
     private Toast toast = null;
@@ -266,6 +268,7 @@ public class WiFiEduroam extends Activity {
         // Enterprise Settings
         HashMap<String, String> configMap = new HashMap<String, String>();
         configMap.put(INT_SUBJECT_MATCH, subject_match);
+        configMap.put(INT_ALT_SUBJECT_MATCH, alt_subject_match);
         configMap.put(INT_ANONYMOUS_IDENTITY, "anonymous" + realm);
         configMap.put(INT_EAP, "TTLS");
         configMap.put(INT_PHASE2, "auth=PAP");
@@ -319,7 +322,7 @@ public class WiFiEduroam extends Activity {
 
             enterpriseConfig.setCaCertificate(caCert);
             if (android.os.Build.VERSION.SDK_INT >= 23) {
-                enterpriseConfig.setAltSubjectMatch(configMap.get(INT_SUBJECT_MATCH));
+                enterpriseConfig.setAltSubjectMatch(configMap.get(INT_ALT_SUBJECT_MATCH));
             } else {
                 //noinspection deprecation
                 enterpriseConfig.setSubjectMatch(configMap.get(INT_SUBJECT_MATCH));
