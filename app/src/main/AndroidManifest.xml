@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.hu_berlin.eduroam"
     android:installLocation="auto"
-    android:versionCode="20160608"
-    android:versionName="0.26">
+    android:versionCode="20170725"
+    android:versionName="0.27">
 
     <uses-feature
         android:name="android.hardware.touchscreen"
