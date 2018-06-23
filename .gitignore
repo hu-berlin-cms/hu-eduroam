@@ -27,3 +27,5 @@ proguard/
 
 # Idea Workspace
 .idea/workspace.xml
+.idea/caches/
+.idea/dictionaries/

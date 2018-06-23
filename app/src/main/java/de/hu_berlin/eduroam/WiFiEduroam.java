@@ -681,6 +681,7 @@ public class WiFiEduroam extends Activity {
             if (android.os.Build.VERSION.SDK_INT < 23) {
                 macAddress = connInfo.getMacAddress();
             } else {
+                // FIXME https://stackoverflow.com/a/39792022/1381638
                 // dirty hack for Marshmallow
                 try {
                     File file = new File("/sys/class/net/wlan0/address");
