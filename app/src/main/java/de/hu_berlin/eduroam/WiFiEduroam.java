@@ -164,7 +164,7 @@ public class WiFiEduroam extends Activity {
             // Get a reference to the KEYGUARD_SERVICE
             KeyguardManager keyguardManager = (KeyguardManager) this.getSystemService(Context.KEYGUARD_SERVICE);
             // Query the keyguard security
-            return keyguardManager.isKeyguardSecure();
+            return (keyguardManager != null) && keyguardManager.isKeyguardSecure();
         } else {
             // source: http://stackoverflow.com/a/25291077/1381638
             // could check against isLockPasswordEnabled() and isLockPatternEnabled()
@@ -191,6 +191,10 @@ public class WiFiEduroam extends Activity {
 
     private void saveWifiConfig() {
         WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(WIFI_SERVICE);
+        if (wifiManager == null) {
+            updateStatus(getString(R.string.ERR_SAVE_CONFIG));
+            return;
+        }
         wifiManager.setWifiEnabled(true);
 
         // wait 5 seconds for wifi to get enabled
@@ -200,8 +204,7 @@ public class WiFiEduroam extends Activity {
                 updateStatus(getString(R.string.STATUS_WIFI_WAIT));
             try {
                 Thread.sleep(100);
-            } catch (InterruptedException e) {
-                continue;
+            } catch (InterruptedException ignored) {
             }
         }
 
@@ -219,8 +222,7 @@ public class WiFiEduroam extends Activity {
             configs = wifiManager.getConfiguredNetworks();
             try {
                 Thread.sleep(1);
-            } catch (InterruptedException e) {
-                continue;
+            } catch (InterruptedException ignored) {
             }
         }
 
@@ -266,7 +268,7 @@ public class WiFiEduroam extends Activity {
         currentConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
 
         // Enterprise Settings
-        HashMap<String, String> configMap = new HashMap<String, String>();
+        HashMap<String, String> configMap = new HashMap<>();
         configMap.put(INT_SUBJECT_MATCH, subject_match);
         configMap.put(INT_ALT_SUBJECT_MATCH, alt_subject_match);
         configMap.put(INT_ANONYMOUS_IDENTITY, "anonymous" + realm);
@@ -504,11 +506,10 @@ public class WiFiEduroam extends Activity {
         List<WifiConfiguration> configs = null;
         // try to get the configured networks for 10ms
         for (int i = 0; i < 10 && configs == null; i++) {
-            configs = wifiManager.getConfiguredNetworks();
+            configs = wifiManager != null ? wifiManager.getConfiguredNetworks() : null;
             try {
                 Thread.sleep(1);
-            } catch (InterruptedException e) {
-                continue;
+            } catch (InterruptedException ignored) {
             }
         }
 
@@ -534,7 +535,8 @@ public class WiFiEduroam extends Activity {
                   finish();
                 }
               });
-              dlgAlert.create().show();
+              if (!isFinishing())
+                  dlgAlert.create().show();
             }
         });
     }
@@ -609,6 +611,9 @@ public class WiFiEduroam extends Activity {
     private String getTroubleshootingInfo() {
         // get mac address
         WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if (wifiManager == null)
+            return getString(R.string.ERR_NO_TROUBLESHOOT);
+
         wifiManager.setWifiEnabled(true);
 
         String result = "";
@@ -618,8 +623,7 @@ public class WiFiEduroam extends Activity {
         for (int i = 0; i < 20 && !wifiManager.isWifiEnabled(); i++) {
             try {
                 Thread.sleep(100);
-            } catch (InterruptedException e) {
-                continue;
+            } catch (InterruptedException ignored) {
             }
         }
 
@@ -643,8 +647,7 @@ public class WiFiEduroam extends Activity {
                         configs = wifiManager.getConfiguredNetworks();
                         try {
                             Thread.sleep(1);
-                        } catch (InterruptedException e) {
-                            continue;
+                        } catch (InterruptedException ignored) {
                         }
                     }
 
@@ -668,7 +671,7 @@ public class WiFiEduroam extends Activity {
             // deprecated but easy, see http://stackoverflow.com/q/16730711/1381638
             int ip = connInfo.getIpAddress();
             String ipAddress = Formatter.formatIpAddress(ip);
-            if (ipAddress == null || ipAddress == "0.0.0.0") {
+            if (ipAddress == null || ipAddress.equals("0.0.0.0")) {
                 ipAddress = getString(R.string.ERR_NOT_FOUND);
             }
             result += "\n" + getString(R.string.IP_ADDRESS) + ": " + ipAddress;
@@ -689,7 +692,7 @@ public class WiFiEduroam extends Activity {
                 }
             }
 
-            if (macAddress == null || macAddress == "02:00:00:00:00:00") {
+            if (macAddress == null || macAddress.equals("02:00:00:00:00:00")) {
                 macAddress = getString(R.string.ERR_NOT_FOUND);
             }
             result += "\n" + getString(R.string.MAC_ADDRESS) + ": " + macAddress;

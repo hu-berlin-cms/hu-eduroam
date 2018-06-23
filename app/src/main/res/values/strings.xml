@@ -43,4 +43,5 @@
     <string name="WIFI_SETTINGS">Open Wi-Fi preferences</string>
     <string name="INST_FINISHED_REMOVE_LOCK">Installation finished successfully.\n\nYou may now remove the screen lock, if you like. Under Android 6.0 it is only needed during the installation process.\nTo remove screen lock, open security settings and change lock screen type to "swipe".</string>
     <string name="SECURITY_SETTINGS">Open Security Settings</string>
+    <string name="ERR_SAVE_CONFIG">Could not save config!</string>
 </resources>

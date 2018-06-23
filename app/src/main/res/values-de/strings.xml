@@ -43,4 +43,5 @@
     <string name="WIFI_SETTINGS">WLAN-Einstellungen öffnen</string>
     <string name="INST_FINISHED_REMOVE_LOCK">Installation erfolgreich abgeschlossen.\n\nWenn Sie möchten, können Sie die Displaysperre jetzt wieder entfernen. Sie wird unter Android 6.0 nur während der Installation benötigt.\n\nÖffnen Sie dazu die Sicherheitseinstellungen und ändern Sie den Sperrbildschirmtyp auf \"streichen\".</string>
     <string name="SECURITY_SETTINGS">Sicherheitseinstellungen öffnen</string>
+    <string name="ERR_SAVE_CONFIG">Konnte WLAN-Konfiguration nicht speichern!</string>
 </resources>
