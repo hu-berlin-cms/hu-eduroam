@@ -19,7 +19,7 @@
     <string name="EXIT">Beenden</string>
 
     <string name="ABOUT_CONTENT">eduroam WLAN Installer für Angehörige der Humboldt-Universität zu Berlin basierend auf "Nikhef eduroam Wifi helper". Installiert eduroam WLAN-Profil inklusive benötigten Zertifikaten.</string>
-    <string name="TROUBLESHOOT_CONTENT">Bei Problemen wenden Sie sich an die Benutzerberatung (030209370000, oper@cms.hu-berlin.de).\n\nNützliche Informationen:</string>
+    <string name="TROUBLESHOOT_CONTENT">Bei Problemen wenden Sie sich an die CMS-Benutzerberatung:\n\nTelefon: 030209370000\neMail: cms-benutzerberatung@hu-berlin.de\n\nNützliche Informationen:</string>
     <string name="UNCHANGED">Unverändert</string>
     <string name="CHANGED">Verändert</string>
     <string name="HU_LOGO">HU Logo</string>

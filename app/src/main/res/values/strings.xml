@@ -31,7 +31,7 @@
     <string name="STATUS_WIFI_WAIT">Waiting for Wi-Fi to get enabled...</string>
     <string name="STATUS_INSTALL_PROFILE">Installing Wi-Fi profile...</string>
     <string name="MAC_ADDRESS">mac address</string>
-    <string name="TROUBLESHOOT_CONTENT">In case of problems our helpdesk (Benutzerberatung) will try to help (030209370000, oper@cms.hu-berlin.de).\n\nHelpful information:</string>
+    <string name="TROUBLESHOOT_CONTENT">In case of problems our helpdesk (CMS-Benutzerberatung) will try to help:\n\nphone: 030209370000\nemail: cms-benutzerberatung@hu-berlin.de\n\nHelpful information:</string>
     <string name="ERR_NOT_FOUND">Could not be determined</string>
     <string name="AP">Access Point</string>
     <string name="SSID">Wi-Fi</string>
