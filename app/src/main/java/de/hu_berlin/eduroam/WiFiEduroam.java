@@ -274,7 +274,7 @@ public class WiFiEduroam extends Activity {
         configMap.put(INT_PHASE2, "auth=PAP");
         configMap.put(INT_CA_CERT, INT_CA_PREFIX + ca_name);
         configMap.put(INT_PASSWORD, password.getText().toString());
-        configMap.put(INT_IDENTITY, username.getText().toString());
+        configMap.put(INT_IDENTITY, username.getText().toString().trim());
 
         if (android.os.Build.VERSION.SDK_INT >= 14 && android.os.Build.VERSION.SDK_INT <= 17) {
             applyAndroid4_42EnterpriseSettings(currentConfig, configMap);
