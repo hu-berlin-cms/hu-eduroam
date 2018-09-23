@@ -109,10 +109,10 @@ public class WiFiEduroam extends Activity {
             ((android.widget.Button) findViewById(R.id.button1)).setText(R.string.Install_exists);
         }
 
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
 
-        final Button myButton = (Button) findViewById(R.id.button1);
+        final Button myButton = findViewById(R.id.button1);
         if (myButton == null)
             throw new RuntimeException("button1 not found. Odd");
 
@@ -243,7 +243,6 @@ public class WiFiEduroam extends Activity {
         }
 
         currentConfig.hiddenSSID = false;
-        currentConfig.priority = 40;
         currentConfig.status = WifiConfiguration.Status.DISABLED;
 
         currentConfig.allowedKeyManagement.clear();
@@ -301,7 +300,9 @@ public class WiFiEduroam extends Activity {
             wifiManager.enableNetwork(networkId, false);
         }
 
-        wifiManager.saveConfiguration();
+        if (Build.VERSION.SDK_INT < 26) {
+            wifiManager.saveConfiguration();
+        }
 
         // everything went fine
         // cleanup after install
@@ -327,6 +328,7 @@ public class WiFiEduroam extends Activity {
                 enterpriseConfig.setAltSubjectMatch(configMap.get(INT_ALT_SUBJECT_MATCH));
             } else {
                 //noinspection deprecation
+                //FIXME use AltSubjectMatch if API >= 23
                 enterpriseConfig.setSubjectMatch(configMap.get(INT_SUBJECT_MATCH));
             }
             enterpriseConfig.setIdentity(configMap.get(INT_IDENTITY));
@@ -590,7 +592,7 @@ public class WiFiEduroam extends Activity {
                 password.setText("");
 
                 // reenable button
-                final Button myButton = (Button) findViewById(R.id.button1);
+                final Button myButton = findViewById(R.id.button1);
                 myButton.setEnabled(true);
             }
         });
@@ -670,6 +672,7 @@ public class WiFiEduroam extends Activity {
 
             // deprecated but easy, see http://stackoverflow.com/q/16730711/1381638
             int ip = connInfo.getIpAddress();
+            @SuppressWarnings("deprecation")
             String ipAddress = Formatter.formatIpAddress(ip);
             if (ipAddress == null || ipAddress.equals("0.0.0.0")) {
                 ipAddress = getString(R.string.ERR_NOT_FOUND);
