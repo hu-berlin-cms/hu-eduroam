@@ -171,7 +171,7 @@ public class WiFiEduroam extends Activity {
             // but PASSWORD_QUALITY_NUMERIC seems fine. Couldn't enter a lower quality password on my Android 4.4.4
             String LOCKSCREEN_UTILS = "com.android.internal.widget.LockPatternUtils";
             try {
-                Class<?> lockUtilsClass = Class.forName(LOCKSCREEN_UTILS);
+                @SuppressLint("PrivateApi") Class<?> lockUtilsClass = Class.forName(LOCKSCREEN_UTILS);
                 // "this" is a Context, in my case an Activity
                 Object lockUtils = lockUtilsClass.getConstructor(Context.class).newInstance(this);
 
