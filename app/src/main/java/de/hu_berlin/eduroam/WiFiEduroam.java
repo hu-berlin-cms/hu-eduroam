@@ -189,6 +189,37 @@ public class WiFiEduroam extends Activity {
         }
     }
 
+    private boolean containsDomain(String username, List<String> domains) {
+        for(String domain: domains) {
+            if (username.contains(domain)) {
+                return true;
+            }
+        }
+        return false;  // no match
+    }
+
+    /* append full domain to all usernames (inner identity) to circumvent problems on broken devices (i.e. Wiko...) */
+    private String fix_username(String username) {
+        if (!username.contains("@")) {
+            // cms account without domain
+            return username + "@wlan.hu-berlin.de";
+        } else if (containsDomain(username, valid_full_domains)) {
+            // username contains old full external domain (physik, ...)
+            // => insert wlan subdomain
+            String[] parts = username.split("\\.hu-berlin\\.de");
+            return parts[0] + ".wlan.hu-berlin.de";
+        } else if (username.contains("@cms.hu-berlin.de")) {
+            // old full domain for CMS accounts; => replace
+            String[] parts = username.split("@");
+            return parts[0] + "@wlan.hu-berlin.de";
+        } else if (containsDomain(username, valid_short_domains)) {
+            // username contains short domain
+            return username + ".wlan.hu-berlin.de";
+        } else {
+            return username;
+        }
+    }
+
     private void saveWifiConfig() {
         WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(WIFI_SERVICE);
         if (wifiManager == null) {
@@ -275,7 +306,7 @@ public class WiFiEduroam extends Activity {
         configMap.put(INT_PHASE2, "auth=PAP");
         configMap.put(INT_CA_CERT, INT_CA_PREFIX + ca_name);
         configMap.put(INT_PASSWORD, password.getText().toString());
-        configMap.put(INT_IDENTITY, username.getText().toString().trim());
+        configMap.put(INT_IDENTITY, fix_username(username.getText().toString().trim()));
 
         if (android.os.Build.VERSION.SDK_INT >= 14 && android.os.Build.VERSION.SDK_INT <= 17) {
             applyAndroid4_42EnterpriseSettings(currentConfig, configMap);
