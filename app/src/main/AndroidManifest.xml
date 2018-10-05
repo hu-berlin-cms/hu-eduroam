@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.hu_berlin.eduroam"
     android:installLocation="auto"
-    android:versionCode="20180625"
+    android:versionCode="20181005"
     android:versionName="0.28">
 
     <uses-feature
