@@ -18,12 +18,10 @@
 package de.hu_berlin.eduroam;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.KeyguardManager;
-import android.app.admin.DevicePolicyManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,7 +37,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.security.KeyChain;
 import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.Log;
@@ -57,8 +54,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
@@ -76,7 +71,6 @@ public class WiFiEduroam extends Activity {
     private static final String INT_SUBJECT_MATCH = "subject_match";
     private static final String INT_ALT_SUBJECT_MATCH = "alt_subject_match";
     private static final String INT_ANONYMOUS_IDENTITY = "anonymous_identity";
-    private static final String INT_ENTERPRISEFIELD_NAME = "android.net.wifi.WifiConfiguration$EnterpriseField";
     private static final String INT_PHASE2 = "phase2";
     private static final String INT_PASSWORD = "password";
     private static final String INT_IDENTITY = "identity";
@@ -133,15 +127,7 @@ public class WiFiEduroam extends Activity {
                         display_lock_exists = true;
                     }
 
-                    if (android.os.Build.VERSION.SDK_INT >= 14 && android.os.Build.VERSION.SDK_INT <= 17) {
-                        // 11 == 3.0 Honeycomb 02/2011, 17 == 4.2 Jelly Bean
-                        installCertificates();
-                    } else if (android.os.Build.VERSION.SDK_INT >= 18) {
-                        // new features since 4.3
-                        unlockCredentialStorage();
-                    } else {
-                        throw new RuntimeException("What version is this?! API Mismatch");
-                    }
+                    unlockCredentialStorage();
                 } catch (RuntimeException e) {
                     updateStatus("Runtime Error: " + e.getMessage());
                     e.printStackTrace();
@@ -161,34 +147,10 @@ public class WiFiEduroam extends Activity {
     }
 
     private boolean isDeviceSecured() {
-        // use appropriate API method where possible
-        if (android.os.Build.VERSION.SDK_INT >= 16) {
-            // Get a reference to the KEYGUARD_SERVICE
-            KeyguardManager keyguardManager = (KeyguardManager) this.getSystemService(Context.KEYGUARD_SERVICE);
-            // Query the keyguard security
-            return (keyguardManager != null) && keyguardManager.isKeyguardSecure();
-        } else {
-            // source: http://stackoverflow.com/a/25291077/1381638
-            // could check against isLockPasswordEnabled() and isLockPatternEnabled()
-            // but PASSWORD_QUALITY_NUMERIC seems fine. Couldn't enter a lower quality password on my Android 4.4.4
-            String LOCKSCREEN_UTILS = "com.android.internal.widget.LockPatternUtils";
-            try {
-                @SuppressLint("PrivateApi") Class<?> lockUtilsClass = Class.forName(LOCKSCREEN_UTILS);
-                // "this" is a Context, in my case an Activity
-                Object lockUtils = lockUtilsClass.getConstructor(Context.class).newInstance(this);
-
-                Method method = lockUtilsClass.getMethod("getActivePasswordQuality");
-
-                int lockProtectionLevel = (Integer) method.invoke(lockUtils); // Thank you esme_louise for the cast hint
-
-                if (lockProtectionLevel >= DevicePolicyManager.PASSWORD_QUALITY_NUMERIC) {
-                    return true;
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "ex:" + e);
-            }
-            return false;
-        }
+        // Get a reference to the KEYGUARD_SERVICE
+        KeyguardManager keyguardManager = (KeyguardManager) this.getSystemService(Context.KEYGUARD_SERVICE);
+        // Query the keyguard security
+        return (keyguardManager != null) && keyguardManager.isKeyguardSecure();
     }
 
     private boolean containsDomain(String username, List<String> domains) {
@@ -310,13 +272,7 @@ public class WiFiEduroam extends Activity {
         configMap.put(INT_PASSWORD, password.getText().toString());
         configMap.put(INT_IDENTITY, fix_username(username.getText().toString().trim()));
 
-        if (android.os.Build.VERSION.SDK_INT >= 14 && android.os.Build.VERSION.SDK_INT <= 17) {
-            applyAndroid4_42EnterpriseSettings(currentConfig, configMap);
-        } else if (android.os.Build.VERSION.SDK_INT >= 18) {
-            applyAndroid43EnterpriseSettings(currentConfig, configMap);
-        } else {
-            throw new RuntimeException("API version mismatch!");
-        }
+        applyEnterpriseSettings(currentConfig, configMap);
 
         // add our new networks
         for (String ssid : ssids) {
@@ -334,7 +290,7 @@ public class WiFiEduroam extends Activity {
         }
 
         if (Build.VERSION.SDK_INT < 26) {
-            wifiManager.saveConfiguration();
+            saveWififConfigInManager(wifiManager);
         }
 
         // everything went fine
@@ -344,8 +300,7 @@ public class WiFiEduroam extends Activity {
     }
 
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-    private void applyAndroid43EnterpriseSettings(WifiConfiguration currentConfig, HashMap<String, String> configMap) {
+    private void applyEnterpriseSettings(WifiConfiguration currentConfig, HashMap<String, String> configMap) {
         try {
             CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
             InputStream in = new ByteArrayInputStream(Base64.decode(ca.replaceAll("-----(BEGIN|END) CERTIFICATE-----", ""), Base64.DEFAULT));
@@ -357,12 +312,11 @@ public class WiFiEduroam extends Activity {
             enterpriseConfig.setEapMethod(Eap.TTLS);
 
             enterpriseConfig.setCaCertificate(caCert);
+
             if (android.os.Build.VERSION.SDK_INT >= 23) {
                 enterpriseConfig.setAltSubjectMatch(configMap.get(INT_ALT_SUBJECT_MATCH));
             } else {
-                //noinspection deprecation
-                //FIXME use AltSubjectMatch if API >= 23
-                enterpriseConfig.setSubjectMatch(configMap.get(INT_SUBJECT_MATCH));
+                setSubjectMatchLegacy(enterpriseConfig, configMap.get(INT_SUBJECT_MATCH));
             }
             enterpriseConfig.setIdentity(configMap.get(INT_IDENTITY));
             enterpriseConfig.setPassword(configMap.get(INT_PASSWORD));
@@ -373,29 +327,29 @@ public class WiFiEduroam extends Activity {
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    // Step 1 for android 4.0 - 4.2
-    private void installCertificates() {
-        // Install the CA certificate
-        updateStatus(getString(R.string.STATUS_IMPORT_CA_CERT));
-        Intent intent = KeyChain.createInstallIntent();
-        intent.putExtra(KeyChain.EXTRA_NAME, ca_name);
-        intent.putExtra(KeyChain.EXTRA_CERTIFICATE, Base64.decode(ca.replaceAll("-----(BEGIN|END) CERTIFICATE-----", ""), Base64.DEFAULT));
-        startActivityForResult(intent, 1);
+    @SuppressWarnings("deprecation")
+    private void setSubjectMatchLegacy(WifiEnterpriseConfig cfg, String value) {
+        cfg.setSubjectMatch(value);
     }
 
+    @SuppressWarnings("deprecation")
+    private void saveWififConfigInManager(WifiManager wifiManager) {
+        wifiManager.saveConfiguration();
+    }
 
     @Override
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    // Step 2 for android 4.0 - 4.2; dispatcher for later steps
+    // dispatcher for later steps
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        /*
+         * requestCode 1: unused
+         * requestCode 2: unlock credential storage
+         * requestCode 3: open wifi settings dialog (help user remove wifi profiles we aren't allowed to remove)
+         * requestCode 4: open security settings dialog to help user removing screen lock, if android supports it
+                          and we are the only reason for the screen lock
+         */
         // after opening security settings dialog
         if (requestCode == 4) {
             finish();
-            return;
-        }
-        if (requestCode == 1 && resultCode != RESULT_OK) {
-            updateStatus(getString(R.string.INST_ABORTED));
             return;
         }
 
@@ -408,51 +362,6 @@ public class WiFiEduroam extends Activity {
                 saveWifiConfig();
             }
         }).start();
-    }
-
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    // Last step for android 4.0 - 4.2, called from saveWifiConfig
-    private void applyAndroid4_42EnterpriseSettings(WifiConfiguration currentConfig, HashMap<String, String> configMap) {
-        // NOTE: This code is mighty ugly, but reflection is the only way to get the methods we need
-        // Get the enterprise class via reflection
-        Class<?>[] wcClasses = WifiConfiguration.class.getClasses();
-        Class<?> wcEnterpriseField = null;
-
-        for (Class<?> wcClass : wcClasses) {
-            if (wcClass.getName().equals(
-                    INT_ENTERPRISEFIELD_NAME)) {
-                wcEnterpriseField = wcClass;
-                break;
-            }
-        }
-        if (wcEnterpriseField == null) {
-            throw new RuntimeException("There is no enterprisefield class.");
-        }
-
-        // Get the setValue handler via reflection
-        Method wcefSetValue = null;
-        for (Method m : wcEnterpriseField.getMethods()) {
-            if (m.getName().equals("setValue")) {
-                wcefSetValue = m;
-                break;
-            }
-        }
-        if (wcefSetValue == null) {
-            throw new RuntimeException("There is no setValue method.");
-        }
-
-        // Fill fields from the HashMap
-        Field[] wcefFields = WifiConfiguration.class.getFields();
-        for (Field wcefField : wcefFields) {
-            if (configMap.containsKey(wcefField.getName())) {
-                try {
-                    wcefSetValue.invoke(wcefField.get(currentConfig),
-                            configMap.get(wcefField.getName()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
     @Override
@@ -672,26 +581,24 @@ public class WiFiEduroam extends Activity {
 
             // get uid
             String uid = null;
-            if (android.os.Build.VERSION.SDK_INT >= 18) {
-                int netid = connInfo.getNetworkId();
-                if (netid > -1) {
-                    // we are connected
-                    List<WifiConfiguration> configs = null;
-                    // try to get the configured networks for 10ms
-                    for (int i = 0; i < 10 && configs == null; i++) {
-                        configs = wifiManager.getConfiguredNetworks();
-                        try {
-                            Thread.sleep(1);
-                        } catch (InterruptedException ignored) {
-                        }
+            int netid = connInfo.getNetworkId();
+            if (netid > -1) {
+                // we are connected
+                List<WifiConfiguration> configs = null;
+                // try to get the configured networks for 10ms
+                for (int i = 0; i < 10 && configs == null; i++) {
+                    configs = wifiManager.getConfiguredNetworks();
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException ignored) {
                     }
+                }
 
-                    if (configs != null) {
-                        for (WifiConfiguration config : configs) {
-                            if (config.networkId == netid) {
-                                uid = config.enterpriseConfig.getIdentity();
-                                break;
-                            }
+                if (configs != null) {
+                    for (WifiConfiguration config : configs) {
+                        if (config.networkId == netid) {
+                            uid = config.enterpriseConfig.getIdentity();
+                            break;
                         }
                     }
                 }
