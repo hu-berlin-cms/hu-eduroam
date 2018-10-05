@@ -90,11 +90,13 @@ public class WiFiEduroam extends Activity {
     private EditText username;
     private EditText password;
     private String ca;
-    private String ca_name = "tcom";
+    private String ca_name = "tcom2ndgen";
     private String subject_match = "-radius.cms.hu-berlin.de";
     private String alt_subject_match = "DNS:srv1-radius.cms.hu-berlin.de;DNS:srv2-radius.cms.hu-berlin.de";
-    private String realm = "@cms.hu-berlin.de";
+    private String realm = "@wlan.hu-berlin.de";
     private List<String> ssids = Arrays.asList("eduroam", "eduroam_5GHz");
+    private List<String> valid_full_domains = Arrays.asList("physik.hu-berlin.de", "mathematik.hu-berlin.de", "informatik.hu-berlin.de");
+    private List<String> valid_short_domains = Arrays.asList("physik", "mathematik", "informatik");
     private Toast toast = null;
     private boolean display_lock_exists = false;
 
@@ -124,7 +126,7 @@ public class WiFiEduroam extends Activity {
 
                 try {
                     updateStatus(getString(R.string.STATUS_INSTALL_PROFILE));
-                    InputStream caCertInputStream = getResources().openRawResource(R.raw.deutsche_telekom_root_ca_2);
+                    InputStream caCertInputStream = getResources().openRawResource(R.raw.t_telesec_globalroot_class_2);
                     ca = convertStreamToString(caCertInputStream);
 
                     if (isDeviceSecured()) {
