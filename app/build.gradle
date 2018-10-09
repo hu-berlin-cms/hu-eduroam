@@ -19,4 +19,5 @@ android {
 }
 
 dependencies {
+    implementation "com.android.support:support-compat:27.0.0"
 }

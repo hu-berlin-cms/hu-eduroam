@@ -44,4 +44,8 @@
     <string name="INST_FINISHED_REMOVE_LOCK">Installation finished successfully.\n\nYou may now remove the screen lock, if you like. Under Android 6.0 it is only needed during the installation process.\nTo remove screen lock, open security settings and change lock screen type to "swipe".</string>
     <string name="SECURITY_SETTINGS">Open Security Settings</string>
     <string name="ERR_SAVE_CONFIG">Could not save config!</string>
+    <string name="channel_name">HU eduroam announcements</string>
+    <string name="channel_description">Channel for important announcements regarding eduroam</string>
+    <string name="notification_title">Changes in eduroam service</string>
+    <string name="notification_text">Overwrite your current eduroam Wi-Fi profiles using our app, if you want to continue using eduroam.</string>
 </resources>
