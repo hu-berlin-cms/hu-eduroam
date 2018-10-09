@@ -6,11 +6,20 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiEnterpriseConfig;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static android.content.Context.WIFI_SERVICE;
+import static de.hu_berlin.eduroam.WiFiEduroam.surroundWithQuotes;
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
     private static final String TAG = "MyBroadcastReceiver";
@@ -18,6 +27,53 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
+        //check if notification needed
+        List<String> ssids = Arrays.asList("eduroam", "eduroam_5GHz");
+
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(WIFI_SERVICE);
+        //return, if we can't check
+        if (wifiManager == null) {
+            Log.d(TAG, "Could not check for notification need");
+            return;
+        }
+
+        List<WifiConfiguration> configs = null;
+        // try to get the configured networks for 10ms
+        for (int i = 0; i < 10 && configs == null; i++) {
+            configs = wifiManager.getConfiguredNetworks();
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException ignored) {
+            }
+        }
+
+        if (configs == null) {
+            Log.d(TAG, "Could not check for notification need");
+            return;
+        }
+
+        // loop through networks and check for eduroam configurations
+        // if there is one with a new anonymous identity, the user doesn't need to do anything
+        boolean eduroam_found = false;
+        for (WifiConfiguration config : configs) {
+            for (String ssid : ssids) {
+                if (config.SSID.equals(surroundWithQuotes(ssid))) {
+                    eduroam_found = true;
+                    if (config.enterpriseConfig == null || config.enterpriseConfig.getAnonymousIdentity() == null || config.enterpriseConfig.getAnonymousIdentity().contains("wlan.hu-berlin.de")) {
+                        Log.d(TAG, "Notification not needed");
+                        return;
+                    }
+                }
+            }
+        }
+
+        // no notification on fresh install
+        if (!eduroam_found) {
+            Log.d(TAG, "No notification on fresh install");
+            return;
+        }
+
         createNotificationChannel(context);
 
         // open App, when tapping on notification
