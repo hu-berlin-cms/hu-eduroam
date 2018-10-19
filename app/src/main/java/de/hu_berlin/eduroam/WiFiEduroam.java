@@ -392,7 +392,8 @@ public class WiFiEduroam extends Activity {
                             "C" + pi.versionCode);
                 }
                 builder.setPositiveButton(getString(android.R.string.ok), null);
-                builder.show();
+                if (!isFinishing())
+                    builder.show();
 
                 return true;
 
@@ -401,7 +402,8 @@ public class WiFiEduroam extends Activity {
                 builder.setMessage(getString(R.string.TROUBLESHOOT_CONTENT) +
                         getTroubleshootingInfo());
                 builder.setPositiveButton(getString(android.R.string.ok), null);
-                builder.show();
+                if (!isFinishing())
+                    builder.show();
 
                 return true;
 
@@ -501,7 +503,8 @@ public class WiFiEduroam extends Activity {
                         finish();
                     }
                 });
-                dlgAlert.create().show();
+                if (!isFinishing())
+                    dlgAlert.create().show();
             }
         });
     }
@@ -522,7 +525,8 @@ public class WiFiEduroam extends Activity {
                         finish();
                     }
                 });
-                dlgAlert.create().show();
+                if (!isFinishing())
+                    dlgAlert.create().show();
             }
         });
     }
