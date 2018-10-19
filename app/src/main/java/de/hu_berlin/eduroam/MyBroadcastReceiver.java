@@ -58,7 +58,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         boolean eduroam_found = false;
         for (WifiConfiguration config : configs) {
             for (String ssid : ssids) {
-                if (config.SSID.equals(surroundWithQuotes(ssid))) {
+                if (config != null && config.SSID != null && config.SSID.equals(surroundWithQuotes(ssid))) {
                     eduroam_found = true;
                     if (config.enterpriseConfig == null || config.enterpriseConfig.getAnonymousIdentity() == null || config.enterpriseConfig.getAnonymousIdentity().contains("wlan.hu-berlin.de")) {
                         Log.d(TAG, "Notification not needed");
